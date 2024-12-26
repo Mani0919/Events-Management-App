@@ -2,6 +2,7 @@
   "expo": {
     "name": "supabaseproject",
     "slug": "supabaseproject",
+    "scheme":"supabaseproject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,7 +31,8 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m"
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {
