@@ -18,10 +18,24 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.eashan20.supabaseproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "eb9e3d9e-cb18-4e7c-9e86-5b4801a79d72"
+      }
     }
   }
 }
