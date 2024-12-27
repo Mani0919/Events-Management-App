@@ -9,16 +9,10 @@ export default function Root() {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: false,
+            headerShown: true,
+            title:"Add Event"
           }}
         />
-        <Stack.Screen
-          name="profile"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="admin" />
       </Stack>
     </>
   );

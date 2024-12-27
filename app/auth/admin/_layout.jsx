@@ -13,12 +13,11 @@ export default function Root() {
           }}
         />
         <Stack.Screen
-          name="profile"
+          name="signup"
           options={{
             headerShown: false,
           }}
         />
-        <Stack.Screen name="admin" />
       </Stack>
     </>
   );

@@ -2,7 +2,7 @@
   "expo": {
     "name": "supabaseproject",
     "slug": "supabaseproject",
-    "scheme":"supabaseproject",
+    "scheme": "supabaseproject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -32,7 +32,13 @@
           "iosUrlScheme": "com.googleusercontent.apps.117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m"
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
     "extra": {
       "eas": {
