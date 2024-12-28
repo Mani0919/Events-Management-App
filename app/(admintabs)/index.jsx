@@ -72,7 +72,10 @@ export default function Index() {
             <Text className="text-[20px]">Events</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity className="flex flex-row px-4 py-3  rounded-xl bg-gray-400  justify-center items-center">
+        <TouchableOpacity
+          className="flex flex-row px-4 py-3  rounded-xl bg-gray-400  justify-center items-center"
+          onPress={() => router.push("/allusers/testimonals")}
+        >
           <View className="mr-3">
             <MaterialIcons name="reviews" size={32} color="black" />
           </View>

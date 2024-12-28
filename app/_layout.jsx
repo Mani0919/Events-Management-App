@@ -35,7 +35,7 @@ export default function Root() {
           <Stack.Screen
             name="allusers"
             options={{
-              headerShown: true,
+              headerShown: false,
               title: "Users",
             }}
           />
