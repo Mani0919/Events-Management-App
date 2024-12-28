@@ -10,9 +10,11 @@ export default function Root() {
           name="index"
           options={{
             headerShown: true,
-            title:"Add Event"
+            title: "Events",
           }}
         />
+        <Stack.Screen name="addupdateevent" />
+        <Stack.Screen name="singleevent"/>
       </Stack>
     </>
   );

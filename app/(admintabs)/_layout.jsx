@@ -82,6 +82,20 @@ export default function Root() {
           }}
         />
         <Tabs.Screen
+          name="events"
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabBarIcon
+                name="Admincontrol"
+                color={color}
+                size={size}
+                isActive={focused}
+              />
+            ),
+            tabBarLabel: "Events",
+          }}
+        />
+        <Tabs.Screen
           name="admincontrol"
           options={{
             tabBarIcon: ({ color, size, focused }) => (

@@ -32,12 +32,7 @@ export default function Root() {
               headerShown: false,
             }}
           />
-          <Stack.Screen
-            name="events"
-            options={{
-              headerShown: false,
-            }}
-          />
+      
         </Stack>
       </Context>
     </>
