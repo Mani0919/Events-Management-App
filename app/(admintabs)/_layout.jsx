@@ -6,6 +6,7 @@ import { useAdminContext } from "../../context/authcontext";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 const TabBarIcon = ({ name, color, size, isActive }) => {
   return (
     <View
@@ -33,6 +34,12 @@ const TabBarIcon = ({ name, color, size, isActive }) => {
       ) : name === "Admincontrol" ? (
         <MaterialIcons
           name="admin-panel-settings"
+          size={24}
+          color={`${isActive ? "#fff" : "rgba(255, 255, 255, 0.5)"}`}
+        />
+      ) : name === "event" ? (
+        <SimpleLineIcons
+          name="event"
           size={24}
           color={`${isActive ? "#fff" : "rgba(255, 255, 255, 0.5)"}`}
         />
@@ -86,7 +93,7 @@ export default function Root() {
           options={{
             tabBarIcon: ({ color, size, focused }) => (
               <TabBarIcon
-                name="Admincontrol"
+                name="event"
                 color={color}
                 size={size}
                 isActive={focused}
