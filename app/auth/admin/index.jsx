@@ -12,19 +12,19 @@ export default function Index() {
       let { data, error } = await supabase
         .from("Admin")
         .select("*")
-        .eq("Email", Email).eq("password",Password);
-        console.log(data)
-        if(data.length>0)
-        {
-          console.log("Admin Found")
-          await AsyncStorage.setItem("isAdmin","false")
-          router.push("/(admintabs)")
-        }
-        else{
-          router.push("/auth/admin/signup")
-        }
+        .eq("Email", Email)
+        .eq("password", Password);
+      console.log(data);
+      if (data.length > 0) {
+        console.log("Admin Found");
+        AsyncStorage.setItem("isAdmin", "false");
+        AsyncStorage.setItem("adminEmail", Email);
+        router.push("/(admintabs)");
+      } else {
+        router.push("/auth/admin/signup");
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   return (
@@ -41,7 +41,7 @@ export default function Index() {
           onChangeText={setPassword}
         />
       </View>
-      <Button title="Submit" onPress={handleSubmit}/>
+      <Button title="Submit" onPress={handleSubmit} />
     </SafeAreaView>
   );
 }
