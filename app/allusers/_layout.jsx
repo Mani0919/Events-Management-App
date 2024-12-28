@@ -9,11 +9,17 @@ export default function Root() {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: false,
+            headerShown: true,
+            title: "Users",
           }}
         />
-
-        <Stack.Screen name="admin" />
+        <Stack.Screen
+          name="testimonals"
+          options={{
+            headerShown: true,
+            title: "Testimonals",
+          }}
+        />
       </Stack>
     </>
   );

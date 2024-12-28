@@ -4,8 +4,9 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { supabase } from "../../utlis/supabase";
-import { View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Login() {
   GoogleSignin.configure({
     scopes: ["https://www.googleapis.com/auth/drive.readonly"],
@@ -33,16 +34,39 @@ export default function Login() {
                 provider: "google",
                 token: userInfo.data.idToken,
               });
-              
+
               if (userInfo.type === "success") {
-                router.push({
-                  pathname: "/auth/profile",
-                  params: {
-                    useremail: userInfo.data.user.email,
-                    name: userInfo.data.user.name,
-                    photo: userInfo.data.user.photo,
-                  },
-                });
+                AsyncStorage.setItem("isAdmin", "false");
+                try {
+                  let { data, error } = await supabase
+                    .from("users")
+                    .select("*")
+                    .eq("email", userInfo?.data?.user?.email);
+                  console.log("dataaaaa", data);
+                  if (Array.isArray(data) && data.length === 0) {
+                    let { data, error } = await supabase.from("users").insert([
+                      {
+                        email: userInfo?.data?.user?.email,
+                        name: userInfo?.data?.user?.name,
+                        photo: userInfo?.data?.user?.photo,
+                        isAdmin: false,
+                      },
+                    ]);
+                    console.log("data", data, error);
+                  } else {
+                    router.push("/(usertabs)");
+                  }
+                } catch (error) {
+                  console.log("error", error);
+                }
+                // router.push({
+                //   pathname: "/auth/profile",
+                //   params: {
+                //     useremail: userInfo?.data?.user?.email,
+                //     name: userInfo?.data?.user?.name,
+                //     photo: userInfo?.data?.user?.photo,
+                //   },
+                // });
               }
             } else {
               throw new Error("no ID token present!");
@@ -65,6 +89,17 @@ export default function Login() {
           }
         }}
       />
+      <TouchableOpacity
+        style={{ backgroundColor: "blue", padding: 10, margin: 10 }}
+        onPress={() => router.push("/auth/admin")}
+      >
+        <Text style={{ color: "white" }}>Sign in as a admin</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ backgroundColor: "orange", padding: 10, margin: 10 }}
+      >
+        <Text style={{ color: "white" }}>Sign in as a user</Text>
+      </TouchableOpacity>
     </View>
   );
 }

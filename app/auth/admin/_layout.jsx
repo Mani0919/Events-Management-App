@@ -12,8 +12,12 @@ export default function Root() {
             headerShown: false,
           }}
         />
-
-        <Stack.Screen name="admin" />
+        <Stack.Screen
+          name="signup"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </>
   );
