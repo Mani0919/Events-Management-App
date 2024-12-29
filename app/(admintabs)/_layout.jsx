@@ -102,7 +102,7 @@ export default function Root() {
       <Tabs.Screen
         name="admincontrol"
         options={{
-          title: "Admin",
+          title: "Admin Control",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name="Admincontrol"

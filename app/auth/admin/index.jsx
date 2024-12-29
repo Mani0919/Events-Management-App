@@ -13,10 +13,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../../utlis/supabase";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "@expo/vector-icons/Ionicons";
 export default function Index() {
   const [Email, setEmail] = useState("crazymani4321@gmail.com");
   const [Password, setPassword] = useState("Nani@123");
   const [isVisible, setIsVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const handleSubmit = async () => {
     try {
       let { data, error } = await supabase
@@ -25,7 +27,10 @@ export default function Index() {
         .eq("Email", Email)
         .eq("password", Password);
       console.log(data);
-      if (data.length > 0 && (data[0].AdminType === "admin"|| data[0].AdminType === "hero")) {
+      if (
+        data.length > 0 &&
+        (data[0].AdminType === "admin" || data[0].AdminType === "hero")
+      ) {
         console.log("Admin Found");
         AsyncStorage.setItem("isAdmin", "true");
         AsyncStorage.setItem("adminEmail", Email);
@@ -66,7 +71,7 @@ export default function Index() {
             </Text>
             <View className="bg-gray-50 rounded-xl overflow-hidden">
               <TextInput
-                className="px-4 py-3 text-gray-700"
+                className="px-3 py-3 text-gray-700"
                 placeholder="Enter your email"
                 placeholderTextColor="#9CA3AF"
                 value={Email}
@@ -82,15 +87,30 @@ export default function Index() {
             <Text className="text-gray-700 text-sm font-medium ml-1">
               Password
             </Text>
-            <View className="bg-gray-50 rounded-xl overflow-hidden">
+            <View className="px-3 bg-gray-50 rounded-xl overflow-hidden flex flex-row justify-between items-center">
               <TextInput
-                className="px-4 py-3 text-gray-700"
+                className=" py-3 text-gray-700"
                 placeholder="Enter your password"
                 placeholderTextColor="#9CA3AF"
                 value={Password}
                 onChangeText={setPassword}
-                secureTextEntry
+                secureTextEntry={!showPassword}
               />
+              {showPassword ? (
+                <Ionicons
+                  name="eye"
+                  size={24}
+                  color="black"
+                  onPress={() => setShowPassword(false)}
+                />
+              ) : (
+                <Ionicons
+                  name="eye-off-outline"
+                  size={24}
+                  color="black"
+                  onPress={() => setShowPassword(true)}
+                />
+              )}
             </View>
           </View>
 

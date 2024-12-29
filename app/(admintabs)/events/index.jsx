@@ -126,7 +126,7 @@ export default function Index() {
               </Text>
               <View className="flex-row items-center mt-1">
                 <AntDesign name="enviromento" size={16} color="#4B5563" />
-                <Text className="ml-1 text-gray-600">{item.city}</Text>
+                <Text className="ml-1 text-gray-600">{item.location}({item.city})</Text>
               </View>
               <Text className="text-gray-500 text-sm mt-2 mb-2" numberOfLines={2}>
                 {item.desc}

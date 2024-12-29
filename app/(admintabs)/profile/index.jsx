@@ -121,7 +121,7 @@ export default function Screen1() {
           <MenuButton
             icon="star-outline"
             title="Testimonials"
-            onPress={() => {}}
+            onPress={() => {router.push("/allusers/testimonals")}}
           />
         </View>
 

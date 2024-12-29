@@ -22,6 +22,7 @@ export default function Add() {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [city, setCity] = useState("");
+  const [location, setLocation] = useState("");
   const [disabletime, setDisabletime] = useState("");
   const { id } = useLocalSearchParams();
   useEffect(() => {
@@ -86,6 +87,7 @@ export default function Add() {
             enddate: endDate,
             disableeventtime: disabletime,
             photo: image,
+            location: location,
           },
         ])
         .select();
@@ -110,6 +112,7 @@ export default function Add() {
         setStartDate(data[0].startdate);
         setEndDate(data[0].enddate);
         setImage(data[0].photo);
+        setLocation(data[0].location);
       } catch (error) {
         console.log(error);
       }
@@ -170,7 +173,13 @@ export default function Add() {
               value={city}
               onChangeText={setCity}
             />
-
+            <TextInput
+              placeholder="Location"
+              className="bg-gray-100 p-4 rounded-xl mb-3 text-base"
+              placeholderTextColor="#9CA3AF"
+              value={location}
+              onChangeText={setLocation}
+            />
             <TextInput
               placeholder="Event Description"
               multiline={true}

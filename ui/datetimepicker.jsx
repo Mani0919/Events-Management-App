@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const DateTimePickerComponent = ({ onDateTimeChange, initialDate = new Date() }) => {
+const DateTimePickerComponent = ({
+  onDateTimeChange,
+  initialDate = new Date(),
+}) => {
   const [date, setDate] = useState(initialDate);
-  const [mode, setMode] = useState('date');
+  const [mode, setMode] = useState("date");
   const [show, setShow] = useState(true);
 
   const onChange = (event, selectedDate) => {
-    if (event.type === 'dismissed') {
+    if (event.type === "dismissed") {
       setShow(false);
       return;
     }
@@ -16,10 +19,10 @@ const DateTimePickerComponent = ({ onDateTimeChange, initialDate = new Date() })
     const currentDate = selectedDate || date;
     setDate(currentDate);
 
-    if (mode === 'date') {
+    if (mode === "date") {
       // After date is picked, show time picker
-      setMode('time');
-      if (Platform.OS === 'ios') {
+      setMode("time");
+      if (Platform.OS === "ios") {
         // On iOS, we keep the picker visible and just change mode
         setShow(true);
       } else {
@@ -37,7 +40,8 @@ const DateTimePickerComponent = ({ onDateTimeChange, initialDate = new Date() })
   return (
     <View style={styles.container}>
       <Text style={styles.selectedDateTime}>
-        {date.toLocaleString()}
+        {/* {date.toLocaleString()} */}
+        {date.toLocaleString("en-US", { hour12: true })}
       </Text>
       {show && (
         <DateTimePicker
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   selectedDateTime: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
     marginBottom: 10,
   },
