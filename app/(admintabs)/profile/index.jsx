@@ -8,7 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
 import { useAdminContext } from "../../../context/authcontext";
-
 export default function Screen1() {
   const [email, setEmail] = useState("");
   const { profiledata, profiledetails } = useAdminContext();
@@ -59,64 +58,93 @@ export default function Screen1() {
       console.error("Error uploading profile photo:", error.response || error);
     }
   };
+
+  const MenuButton = ({ icon, title, onPress }) => (
+    <TouchableOpacity
+      className="flex flex-row justify-between items-center p-4 bg-white rounded-xl mb-2 shadow-sm"
+      onPress={onPress}
+    >
+      <View className="flex flex-row items-center space-x-3">
+        <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center">
+          <Ionicons name={icon} size={22} color="#4B5563" />
+        </View>
+        <Text className="text-gray-800 text-lg font-medium">{title}</Text>
+      </View>
+      <MaterialIcons name="arrow-forward-ios" size={20} color="#9CA3AF" />
+    </TouchableOpacity>
+  );
+
   return (
-    <SafeAreaView className="flex-1">
-      <View className="flwx-1 p-3 mt-2">
-        <View className="flex flex-row items-center gap-x-2 mt-7">
-          <View className="w-16 h-16 bg-gray-500 boder-[0.9px] border-gray-400 rounded-full">
-            <Image
-              source={{ uri: profiledata.photo }}
-              className="w-full h-full rounded-full object-cover"
-            />
-          </View>
-          <View>
-            <Text className="text-[20px]"> {profiledata.Name}</Text>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="flex-1 px-4 pt-6">
+        {/* Profile Header */}
+        <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+          <View className="flex flex-row items-center space-x-4">
+            <View className="relative">
+              <View className="w-20 h-20 rounded-full border-2 border-blue-500 p-1">
+                <Image
+                  source={{ uri: profiledata.photo }}
+                  className="w-full h-full rounded-full"
+                />
+              </View>
+              <TouchableOpacity
+                className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5"
+                onPress={openCamera}
+              >
+                <MaterialIcons name="photo-camera" size={16} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text className="text-2xl font-bold text-gray-800">
+                {profiledata.Name}
+              </Text>
+              <Text className="text-gray-500">View and edit profile</Text>
+            </View>
           </View>
         </View>
-        <View className="border-b-[1.9px] border-gray-300 my-2"></View>
-        <TouchableOpacity
-          className="mb-1 flex flex-row justify-between items-center p-3 "
-          onPress={() => router.push("/(admintabs)/profile/profileupdate")}
-        >
-          <View className="flex flex-row gap-x-2 items-center">
-            <Ionicons name="person-outline" size={22} color="black" />
-            <Text className="text-[18px] font-pregular">Profile</Text>
-          </View>
-          <MaterialIcons name="arrow-forward-ios" size={22} color="#090A0A" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-1 flex flex-row justify-between items-center p-3 "
-          onPress={openCamera}
-        >
-          <View className="flex flex-row gap-x-2 items-center">
-            <Ionicons name="person-outline" size={22} color="black" />
-            <Text className="text-[18px] font-pregular">
-              Update Profile Photo
-            </Text>
-          </View>
-          <MaterialIcons name="arrow-forward-ios" size={22} color="#090A0A" />
-        </TouchableOpacity>
-        <TouchableOpacity className="mb-1 flex flex-row justify-between items-center p-3 ">
-          <View className="flex flex-row gap-x-2 items-center">
-            <Ionicons name="person-outline" size={22} color="black" />
-            <Text className="text-[18px] font-pregular">Testimonals</Text>
-          </View>
-          <MaterialIcons name="arrow-forward-ios" size={22} color="#090A0A" />
-        </TouchableOpacity>
-        <View className="my-7">
-          <View className=" p-3 flex flex-col gap-y-2">
-            <Text className="text-[20px] font-psemibold">Other</Text>
 
-            <TouchableOpacity
-              className=""
-              onPress={() => {
-                AsyncStorage.removeItem("isAdmin")
-                router.push("/auth");
-              }}
-            >
-              <Text className=" text-[18px] font-bold">Logout</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Menu Section */}
+        <View className="mb-6">
+          <Text className="text-lg font-bold text-gray-800 mb-3 px-1">
+            Account Settings
+          </Text>
+          <MenuButton
+            icon="person-outline"
+            title="Profile"
+            onPress={() => router.push("/(admintabs)/profile/profileupdate")}
+          />
+          <MenuButton
+            icon="camera-outline"
+            title="Update Profile Photo"
+            onPress={openCamera}
+          />
+          <MenuButton
+            icon="star-outline"
+            title="Testimonials"
+            onPress={() => {}}
+          />
+        </View>
+
+        {/* Other Section */}
+        <View>
+          <Text className="text-lg font-bold text-gray-800 mb-3 px-1">
+            Other
+          </Text>
+          <TouchableOpacity
+            className="bg-white p-4 rounded-xl flex-row items-center justify-between shadow-sm"
+            onPress={async () => {
+              await AsyncStorage.removeItem("isAdmin");
+              router.push("/auth");
+            }}
+          >
+            <View className="flex flex-row items-center space-x-3">
+              <View className="w-10 h-10 bg-red-50 rounded-full items-center justify-center">
+                <Ionicons name="log-out-outline" size={22} color="#EF4444" />
+              </View>
+              <Text className="text-red-500 text-lg font-medium">Logout</Text>
+            </View>
+            <MaterialIcons name="arrow-forward-ios" size={20} color="#EF4444" />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

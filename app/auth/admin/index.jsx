@@ -5,8 +5,8 @@ import { supabase } from "../../../utlis/supabase";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [Email, setEmail] = useState("crazymani4321@gmail.com");
+  const [Password, setPassword] = useState("Nani@123");
   const handleSubmit = async () => {
     try {
       let { data, error } = await supabase
