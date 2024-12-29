@@ -23,73 +23,85 @@ export default function Index() {
     fun();
   }, []);
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-gray-100">
+      {/* Header Section */}
       <View
         style={{
-          shadowOffset: { width: -2, height: 4 },
-          shadowColor: "#171717",
+          shadowOffset: { width: 0, height: 4 },
+          shadowColor: "#000",
           shadowOpacity: 0.2,
-          borderBottomLeftRadius: 32,
-          borderBottomRightRadius: 32,
-          shadowRadius: 3,
+          shadowRadius: 4,
         }}
-        className="bg-gray-400 h-[90px] border-b-[0.9px] border-l-[0.9px] border-gray-400"
+        className="bg-gray-400 h-[110px] rounded-b-3xl border-b border-gray-300"
       >
-        <View className="flex flex-row items-center justify-between">
-          <View className="mt-6 px-4">
-            <Text>Hii 👋</Text>
-            <Text className="text-[19px]">{profiledata.Name}</Text>
-            <View className="flex flex-row items-center gap-x-1">
-              <View className="w-2 h-2 bg-green-500 rounded-full"></View>
-              <Text>Admin</Text>
+        <View className="flex flex-row items-center justify-between px-4 mt-6">
+          {/* Profile Information */}
+          <View>
+            <Text className="text-lg text-gray-700">Hi 👋</Text>
+            <Text className="text-xl font-semibold text-gray-800">
+              {profiledata.Name}
+            </Text>
+            <View className="flex flex-row items-center gap-x-2 mt-1">
+              <View className="w-3 h-3 bg-green-500 rounded-full"></View>
+              <Text className="text-sm text-gray-600">Admin</Text>
             </View>
           </View>
-          <View className="w-14 h-14  boder-[0.9px] border-gray-400 rounded-full mr-4 mt-3">
+          {/* Profile Image */}
+          <View className="w-16 h-16 border border-gray-300 rounded-full overflow-hidden">
             <Image
               source={{ uri: profiledata.photo }}
-              className="w-full h-full rounded-full object-cover"
+              className="w-full h-full object-cover"
             />
           </View>
         </View>
       </View>
-      <View className="p-3 mt-4">
-        <Text className="text-[20px] font-bold">Dashborad</Text>
+
+      {/* Dashboard Title */}
+      <View className="px-4 mt-6">
+        <Text className="text-2xl font-bold text-gray-800">Dashboard</Text>
       </View>
-      <View className="p-3 flex flex-wrap flex-row items-center justify-start gap-x-3 gap-y-3">
+
+      {/* Cards Section */}
+      <View className="p-4 flex flex-wrap flex-row items-center justify-start gap-4">
+        {/* Users Card */}
         <TouchableOpacity
-          className="flex flex-row px-4 py-3  rounded-xl bg-gray-400  justify-center items-center"
+          className="flex flex-row px-5 py-4 rounded-xl bg-white shadow-md justify-center items-center"
           onPress={() => router.push("/allusers")}
         >
-          <View className="mr-3">
-            <FontAwesome6 name="users" size={32} color="black" />
+          <View className="mr-4">
+            <FontAwesome6 name="users" size={32} color="#4B5563" />
           </View>
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-[18px]">10</Text>
-            <Text className="text-[20px]">Users</Text>
+            <Text className="text-xl font-bold text-gray-800">10</Text>
+            <Text className="text-lg text-gray-600">Users</Text>
           </View>
         </TouchableOpacity>
+
+        {/* Events Card */}
         <TouchableOpacity
-          className="flex flex-row px-4 py-3  rounded-xl bg-gray-400  justify-center items-center"
+          className="flex flex-row px-5 py-4 rounded-xl bg-white shadow-md justify-center items-center"
           onPress={() => router.push("/(admintabs)/events")}
         >
-          <View className="mr-3">
-            <MaterialIcons name="event" size={32} color="black" />
+          <View className="mr-4">
+            <MaterialIcons name="event" size={32} color="#4B5563" />
           </View>
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-[18px]">10</Text>
-            <Text className="text-[20px]">Events</Text>
+            <Text className="text-xl font-bold text-gray-800">10</Text>
+            <Text className="text-lg text-gray-600">Events</Text>
           </View>
         </TouchableOpacity>
+
+        {/* Testimonials Card */}
         <TouchableOpacity
-          className="flex flex-row px-4 py-3  rounded-xl bg-gray-400  justify-center items-center"
+          className="flex flex-row px-5 py-4 rounded-xl bg-white shadow-md justify-center items-center"
           onPress={() => router.push("/allusers/testimonals")}
         >
-          <View className="mr-3">
-            <MaterialIcons name="reviews" size={32} color="black" />
+          <View className="mr-4">
+            <MaterialIcons name="reviews" size={32} color="#4B5563" />
           </View>
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-[18px]">10</Text>
-            <Text className="text-[20px]">Testimonals</Text>
+            <Text className="text-xl font-bold text-gray-800">10</Text>
+            <Text className="text-lg text-gray-600">Testimonials</Text>
           </View>
         </TouchableOpacity>
       </View>
