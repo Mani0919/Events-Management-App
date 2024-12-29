@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../utlis/supabase";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Carousel from "react-native-reanimated-carousel";
+import { router } from "expo-router";
 
 export default function Index() {
   const [data, setData] = useState([]);
