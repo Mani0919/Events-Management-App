@@ -10,10 +10,18 @@ import { supabase } from "../../utlis/supabase";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAdminContext } from "../../context/authcontext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
   const { bottom } = useSafeAreaInsets();
   const { profiledata } = useAdminContext();
   console.log("home", profiledata);
+  useEffect(() => {
+    async function fun() {
+      const res = await AsyncStorage.getItem("isAdmin");
+      console.log("uskjhdjhgjdghj", res);
+    }
+    fun();
+  }, []);
   return (
     <SafeAreaView className="flex-1">
       <View

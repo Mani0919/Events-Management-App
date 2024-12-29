@@ -7,6 +7,7 @@ import { supabase } from "../../utlis/supabase";
 import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 export default function Login() {
   GoogleSignin.configure({
     scopes: ["https://www.googleapis.com/auth/drive.readonly"],
@@ -18,6 +19,13 @@ export default function Login() {
       "117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m.apps.googleusercontent.com",
   });
 
+  useEffect(() => {
+    async function fun() {
+      const res = await AsyncStorage.getItem("isAdmin");
+      console.log("res", res);
+    }
+    fun();
+  }, []);
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <GoogleSigninButton
@@ -53,6 +61,7 @@ export default function Login() {
                       },
                     ]);
                     console.log("data", data, error);
+                    router.push("/(usertabs)");
                   } else {
                     router.push("/(usertabs)");
                   }
