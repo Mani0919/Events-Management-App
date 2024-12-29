@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePickerComponent from "../../../ui/datetimepicker";
 import { supabase } from "../../../utlis/supabase";
 import { useLocalSearchParams } from "expo-router";
+import { MaterialIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 export default function Add() {
   const [image, setImage] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -137,87 +138,161 @@ export default function Add() {
     }
   };
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1">
-        <View className="mx-3 flex flex-col gap-y-2">
-          <TextInput
-            placeholder="Enter Event Name"
-            className="bg-gray-300 p-2 rounded-lg"
-            value={name}
-            onChangeText={setName}
-          />
-          <TextInput
-            placeholder="Enter City"
-            className="bg-gray-300 p-2 rounded-lg"
-            value={city}
-            onChangeText={setCity}
-          />
-          <TextInput
-            placeholder="Enter Description"
-            multiline={true}
-            numberOfLines={10}
-            value={desc}
-            onChangeText={setDesc}
-            className="bg-gray-300 p-2 rounded-lg  text-start"
-            style={{
-              height: 130,
-              textAlignVertical: "top",
-            }}
-          />
-          {image && (
-            <Image source={{ uri: image }} className="w-full h-44 rounded-lg" />
-          )}
-          <TouchableOpacity
-            className="bg-gray-400 p-2 rounded-lg py-3"
-            onPress={openCamera}
-          >
-            <Text className="text-white self-center text-[17px]">
-              {id ? "Update Event Image" : "Upload Event Image"}
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }} // Added padding for tab bar
+      >
+        <View className="p-4 flex flex-col gap-y-4">
+          {/* Form Header */}
+          <Text className="text-2xl font-bold text-gray-800 mb-2">
+            {id ? "Update Event" : "Create New Event"}
+          </Text>
+
+          {/* Basic Information Section */}
+          <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <Text className="text-lg font-semibold text-gray-700 mb-4">
+              Basic Information
             </Text>
-          </TouchableOpacity>
-          <View className="flex flex-row justify-around items-center">
-            <TouchableOpacity
-              onPress={handleShowPicker}
-              className="bg-gray-400 p-2 rounded-lg py-3 px-5"
-            >
-              <Text className="text-white self-center text-[17px]">
-                Start Date
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleEndPicker}
-              className="bg-gray-400 p-2 rounded-lg py-3 px-5"
-            >
-              <Text className="text-white self-center text-[17px]">
-                End Date
-              </Text>
-            </TouchableOpacity>
+
+            <TextInput
+              placeholder="Event Name"
+              className="bg-gray-100 p-4 rounded-xl mb-3 text-base"
+              placeholderTextColor="#9CA3AF"
+              value={name}
+              onChangeText={setName}
+            />
+
+            <TextInput
+              placeholder="City"
+              className="bg-gray-100 p-4 rounded-xl mb-3 text-base"
+              placeholderTextColor="#9CA3AF"
+              value={city}
+              onChangeText={setCity}
+            />
+
+            <TextInput
+              placeholder="Event Description"
+              multiline={true}
+              numberOfLines={10}
+              value={desc}
+              onChangeText={setDesc}
+              className="bg-gray-100 p-4 rounded-xl text-base"
+              style={{
+                height: 150,
+                textAlignVertical: "top",
+              }}
+              placeholderTextColor="#9CA3AF"
+            />
           </View>
-          <View className="flex flex-row justify-around items-center">
-            {startDate && id && <Text>{startDate}</Text>}
-            {endDate && id && <Text>{startDate}</Text>}
-          </View>
-          <View className="flex flex-row justify-around items-center">
-            {showstarttime && (
-              <DateTimePickerComponent
-                onDateTimeChange={handleDateTimeChange}
+
+          {/* Image Section */}
+          <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <Text className="text-lg font-semibold text-gray-700 mb-4">
+              Event Image
+            </Text>
+
+            {image && (
+              <View className="bg-gray-100 rounded-xl overflow-hidden mb-4">
+                <Image source={{ uri: image }} className="w-full h-48" />
+              </View>
+            )}
+
+            <TouchableOpacity
+              className="bg-indigo-600 p-4 rounded-xl flex-row items-center justify-center"
+              onPress={openCamera}
+            >
+              <Ionicons
+                name="camera"
+                size={20}
+                color="white"
+                style={{ marginRight: 8 }}
               />
-            )}
-            {showEndTime && (
-              <DateTimePickerComponent onDateTimeChange={handleEndDate} />
-            )}
+              <Text className="text-white font-medium text-base">
+                {id ? "Update Event Image" : "Upload Event Image"}
+              </Text>
+            </TouchableOpacity>
           </View>
+
+          {/* Date Selection Section */}
+          <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <Text className="text-lg font-semibold text-gray-700 mb-4">
+              Event Duration
+            </Text>
+
+            <View className="flex-row justify-between mb-4">
+              <TouchableOpacity
+                onPress={handleShowPicker}
+                className="bg-indigo-600 py-3 px-6 rounded-xl flex-row items-center flex-1 mr-2"
+              >
+                <MaterialIcons
+                  name="date-range"
+                  size={20}
+                  color="white"
+                  style={{ marginRight: 8 }}
+                />
+                <Text className="text-white font-medium">Start Date</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={handleEndPicker}
+                className="bg-indigo-600 py-3 px-6 rounded-xl flex-row items-center flex-1 ml-2"
+              >
+                <MaterialIcons
+                  name="event"
+                  size={20}
+                  color="white"
+                  style={{ marginRight: 8 }}
+                />
+                <Text className="text-white font-medium">End Date</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Selected Dates Display */}
+            {(startDate || endDate) && id && (
+              <View className="flex-row justify-between bg-gray-100 p-3 rounded-xl">
+                <View className="flex-row items-center">
+                  <FontAwesome5
+                    name="calendar-day"
+                    size={16}
+                    color="#4B5563"
+                    style={{ marginRight: 6 }}
+                  />
+                  <Text className="text-gray-600">{startDate}</Text>
+                </View>
+                <View className="flex-row items-center">
+                  <FontAwesome5
+                    name="calendar-check"
+                    size={16}
+                    color="#4B5563"
+                    style={{ marginRight: 6 }}
+                  />
+                  <Text className="text-gray-600">{endDate}</Text>
+                </View>
+              </View>
+            )}
+
+            {/* Date Picker Components */}
+            <View className="flex-row justify-between">
+              {showstarttime && (
+                <DateTimePickerComponent
+                  onDateTimeChange={handleDateTimeChange}
+                />
+              )}
+              {showEndTime && (
+                <DateTimePickerComponent onDateTimeChange={handleEndDate} />
+              )}
+            </View>
+          </View>
+
+          {/* Submit Button */}
           <TouchableOpacity
-            className="bg-gray-400 p-2 rounded-lg py-3 px-5"
-            onPress={() => {
-              if (id) {
-                UpdateEventData();
-              } else {
-                UploadEventData();
-              }
-            }}
+            className="bg-indigo-600 p-4 rounded-xl shadow-sm"
+            onPress={() => (id ? UpdateEventData() : UploadEventData())}
           >
-            <Text className="text-white self-center text-[18px]">Submit</Text>
+            <Text className="text-white text-center font-semibold text-lg">
+              {id ? "Update Event" : "Create Event"}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

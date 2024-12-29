@@ -26,55 +26,79 @@ export default function Testimonals() {
     }));
   };
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1">
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingVertical: 16 }}
+      >
         {data.length > 0 &&
           data.map((item, index) => {
             const isExpanded = expandedItems[index];
+
             return (
               <View
                 key={index}
-                className="border-[0.9px] border-gray-400 p-2 mx-3 rounded-2xl py-3 px-3 mb-2"
+                className="bg-white mx-4 mb-4 rounded-2xl shadow-sm overflow-hidden border border-gray-100"
               >
-                <View className="flex flex-row justify-between items-start">
-                  <View className="">
-                    <Text className="text-[20px] font-bold mb-1">Review</Text>
-                    {/* <Text className="mb-1 w-52">{item.desc}</Text> */}
-                    <Text className="mb-1 w-52">
+                <View className="p-4">
+                  {/* Header with Image and Name */}
+                  <View className="flex-row items-center mb-4">
+                    <Image
+                      source={{ uri: item?.photo }}
+                      className="w-16 h-16 rounded-full border-2 border-gray-100"
+                    />
+                    <View className="ml-3">
+                      <Text className="text-lg font-bold text-gray-800">
+                        {item.name}
+                      </Text>
+                      <StarRating rating={item.rating} />
+                    </View>
+                  </View>
+
+                  {/* Review Content */}
+                  <View className="bg-gray-50 rounded-xl p-4">
+                    <View className="flex-row items-center mb-2">
+                      <Text className="text-base font-semibold text-gray-800">
+                        Review
+                      </Text>
+                      <View className="h-1 w-1 bg-gray-400 rounded-full mx-2" />
+                      <Text className="text-sm text-gray-500">
+                        {/* {format(new Date(), "MMM dd, yyyy")} */}
+                      </Text>
+                    </View>
+
+                    <Text className="text-gray-600 leading-6">
                       {isExpanded ? (
                         <>
                           {item.desc}
                           <TouchableOpacity
                             onPress={() => toggleDescription(index)}
+                            className="ml-1"
                           >
-                            <Text style={{ color: "blue" }}> ..less</Text>
+                            <Text className="text-indigo-600 font-medium">
+                              Show less
+                            </Text>
                           </TouchableOpacity>
                         </>
                       ) : (
                         <>
-                          {item.desc.slice(0, 64)}
-                          {item.desc.length > 32 && (
-                            <TouchableOpacity
-                              onPress={() => toggleDescription(index)}
-                              // className="mt-1"
-                            >
-                              <Text style={{ color: "blue" }}> ..more</Text>
-                            </TouchableOpacity>
+                          {item.desc.slice(0, 150)}
+                          {item.desc.length > 150 && (
+                            <>
+                              ...
+                              <TouchableOpacity
+                                onPress={() => toggleDescription(index)}
+                                className="ml-1"
+                              >
+                                <Text className="text-indigo-600 font-medium">
+                                  Show more
+                                </Text>
+                              </TouchableOpacity>
+                            </>
                           )}
                         </>
                       )}
                     </Text>
-                    <Text className="text-[18px] font-semibold mb-1">
-                      Rating Given
-                    </Text>
-                    <StarRating rating={item.rating} />
-                  </View>
-                  <View className="flex flex-col justify-center items-center">
-                    <Image
-                      source={{ uri: item?.photo }}
-                      className="w-20 h-20 rounded-full"
-                    />
-                    <Text className="text-[15px] font-bold mt-1">{item.name}</Text>
                   </View>
                 </View>
               </View>
