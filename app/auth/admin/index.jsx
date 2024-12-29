@@ -17,7 +17,7 @@ export default function Index() {
       console.log(data);
       if (data.length > 0) {
         console.log("Admin Found");
-        AsyncStorage.setItem("isAdmin", "false");
+        AsyncStorage.setItem("isAdmin", "true");
         AsyncStorage.setItem("adminEmail", Email);
         router.push("/(admintabs)");
       } else {

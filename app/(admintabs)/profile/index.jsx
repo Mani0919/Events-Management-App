@@ -11,7 +11,7 @@ import { useAdminContext } from "../../../context/authcontext";
 
 export default function Screen1() {
   const [email, setEmail] = useState("");
-  const { profiledata } = useAdminContext();
+  const { profiledata, profiledetails } = useAdminContext();
   useEffect(() => {
     async function fun() {
       const res = await AsyncStorage.getItem("adminEmail");
@@ -50,6 +50,7 @@ export default function Screen1() {
             .eq("Email", email)
             .select();
           console.log(data, error);
+          await profiledetails(email);
         } catch (error) {
           console.log(error);
         }
@@ -108,7 +109,10 @@ export default function Screen1() {
 
             <TouchableOpacity
               className=""
-              onPress={() => router.push("/auth/admin")}
+              onPress={() => {
+                AsyncStorage.removeItem("isAdmin")
+                router.push("/auth");
+              }}
             >
               <Text className=" text-[18px] font-bold">Logout</Text>
             </TouchableOpacity>
