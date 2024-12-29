@@ -1,4 +1,13 @@
-import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../../utlis/supabase";
@@ -7,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
   const [Email, setEmail] = useState("crazymani4321@gmail.com");
   const [Password, setPassword] = useState("Nani@123");
+  const [isVisible, setIsVisible] = useState(false);
   const handleSubmit = async () => {
     try {
       let { data, error } = await supabase
@@ -15,17 +25,26 @@ export default function Index() {
         .eq("Email", Email)
         .eq("password", Password);
       console.log(data);
-      if (data.length > 0) {
+      if (data.length > 0 && (data[0].AdminType === "admin"|| data[0].AdminType === "hero")) {
         console.log("Admin Found");
         AsyncStorage.setItem("isAdmin", "true");
         AsyncStorage.setItem("adminEmail", Email);
         router.push("/(admintabs)");
       } else {
-        router.push("/auth/admin/signup");
+        // router.push("/auth/admin/signup");
+        // Alert.alert("you don't have access")
+        showAlert();
       }
     } catch (error) {
       console.log(error);
     }
+  };
+  const showAlert = () => {
+    setIsVisible(true);
+  };
+
+  const closeAlert = () => {
+    setIsVisible(false);
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -94,11 +113,75 @@ export default function Index() {
         {/* Footer */}
         <View className="flex-row justify-center mt-8">
           <Text className="text-gray-500">Don't have an account? </Text>
-          <TouchableOpacity onPress={()=>router.push("/auth/admin/signup")}>
+          <TouchableOpacity onPress={() => router.push("/auth/admin/signup")}>
             <Text className="text-blue-500 font-medium">Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={closeAlert}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Access Request Sent</Text>
+            <Text style={styles.modalMessage}>
+              Your request for admin access has been sent. Please wait until you
+              are granted access.
+            </Text>
+            <TouchableOpacity style={styles.closeButton} onPress={closeAlert}>
+              <Text style={styles.closeButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#2C3E50",
+  },
+  modalMessage: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#34495E",
+  },
+  closeButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
