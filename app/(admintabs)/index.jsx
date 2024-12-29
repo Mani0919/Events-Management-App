@@ -52,7 +52,7 @@ export default function Index() {
             <View className="flex-1">
               <Text className="text-lg text-black">Welcome back 👋</Text>
               <Text className="text-2xl font-bold text-black mt-1">
-                {profiledata.Name}
+                {profiledata?.Name}
               </Text>
               <View className="flex flex-row items-center gap-x-2 mt-2">
                 <View className="w-2.5 h-2.5 bg-green-400 rounded-full" />
@@ -63,7 +63,7 @@ export default function Index() {
             {/* Profile Image */}
             <View className="w-16 h-16 rounded-full border-2 border-white/20 overflow-hidden bg-white/10">
               <Image
-                source={{ uri: profiledata.photo }}
+                source={{ uri: profiledata?.photo }}
                 className="w-full h-full"
               />
             </View>
