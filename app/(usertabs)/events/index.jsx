@@ -83,7 +83,7 @@ export default function EventsScreen() {
   };
 
   const renderEventItem = ({ item }) => (
-    <View
+    <TouchableOpacity
       style={{
         flexDirection: "row",
         padding: 12,
@@ -97,6 +97,10 @@ export default function EventsScreen() {
         elevation: 3,
         marginHorizontal: 16,
       }}
+      onPress={()=>router.push({
+        pathname:"/(usertabs)/events/singleevent",
+        params:{id:item.id}
+      })}
     >
       <Image
         source={{ uri: item.photo }}
@@ -121,7 +125,7 @@ export default function EventsScreen() {
           <Text className="text-[#666] ml-1">{item.city}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

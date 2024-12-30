@@ -58,6 +58,7 @@ export default function Index() {
                 },
               ]);
             }
+            AsyncStorage.setItem("name", userInfo?.data?.user?.name);
             router.push("/(usertabs)");
           } catch (error) {
             setError("Failed to create user profile");
