@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../utlis/supabase";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Carousel from "react-native-reanimated-carousel";
+import { router } from "expo-router";
 
 export default function Index() {
   const [data, setData] = useState([]);
@@ -58,7 +59,7 @@ export default function Index() {
           <View className="flex-row items-center">
             <AntDesign name="calendar" size={16} color="white" />
             <Text className="text-white ml-1">
-              {new Date(item.date).toLocaleDateString()}
+              {new Date(item.startdate).toLocaleDateString()}
             </Text>
           </View>
         </View>
@@ -129,7 +130,7 @@ export default function Index() {
             <Text className="text-[#403C56] text-[17px] font-semibold">
               Events For You
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>router.push("/(usertabs)/events")}>
               <Text className="text-[#9718DD]">View all</Text>
             </TouchableOpacity>
           </View>
