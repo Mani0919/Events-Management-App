@@ -140,6 +140,15 @@ export default function Add() {
       console.log(error);
     }
   };
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <ScrollView
@@ -267,7 +276,7 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{startDate}</Text>
+                  <Text className="text-gray-600">{formatTimeAgo(startDate)}</Text>
                 </View>
                 <View className="flex-row items-center">
                   <FontAwesome5
@@ -276,7 +285,7 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{endDate}</Text>
+                  <Text className="text-gray-600">{formatTimeAgo(endDate)}</Text>
                 </View>
               </View>
             )}
