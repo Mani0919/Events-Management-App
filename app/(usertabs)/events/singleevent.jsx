@@ -12,13 +12,14 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
-import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../../utlis/supabase";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import WishlistButton from "../../../ui/wishlisticon";
+import AntDesign from "@expo/vector-icons/AntDesign";
 export default function SingleEvent() {
   const { id } = useLocalSearchParams();
   const [data, setData] = useState({});
@@ -33,10 +34,11 @@ export default function SingleEvent() {
     extrapolate: "clamp",
   });
 
-  useEffect(() => {
-    getEvent();
-  }, []);
-
+  useFocusEffect(
+    useCallback(() => {
+      getEvent();
+    }, [])
+  );
   async function getEvent() {
     try {
       const res = await AsyncStorage.getItem("name");
@@ -46,7 +48,7 @@ export default function SingleEvent() {
         .select("*")
         .eq("id", id);
       console.log(events);
-      setCommentsdata(events[0].comments.comments);
+      setCommentsdata(events[0].comments?.comments);
       setData(events[0]);
     } catch (error) {
       console.log(error);
@@ -70,6 +72,16 @@ export default function SingleEvent() {
         className="w-full h-full"
         resizeMode="cover"
       />
+      <View className="absolute top-3 left-3 right-3 flex-row justify-between items-center">
+        <AntDesign
+          name="arrowleft"
+          size={30}
+          color="white"
+          onPress={() => router.back()}
+        />
+
+        <WishlistButton />
+      </View>
       <View className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
         <Text className="absolute bottom-6 left-4 text-3xl font-bold text-white">
           {data.eventname}
@@ -167,6 +179,9 @@ export default function SingleEvent() {
         console.error("Error updating comments:", updateError);
       } else {
         console.log("Comment added successfully:", updateData);
+        setNewComment("");
+        setCommentsdata((prevComments) => [...prevComments, newComments]);
+        await getEvent();
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -185,15 +200,17 @@ export default function SingleEvent() {
           <EventDetails />
           <View className="flex-row items-center justify-between px-4 mb-2 mt-4">
             <Text className="text-xl font-bold">
-              Discussion ({commentsdata.length})
+              Discussions{" "}
+              {commentsdata?.length > 0 ? `(${commentsdata?.length})` : ""}
             </Text>
             <View className="bg-blue-100 px-4 py-1 rounded-full">
               <Text className="text-blue-600 font-medium">Latest</Text>
             </View>
           </View>
-          {commentsdata.length>0 && commentsdata.map((item,index) => (
-            <CommentItem key={index} item={item} />
-          ))}
+          {commentsdata?.length > 0 &&
+            commentsdata.map((item, index) => (
+              <CommentItem key={index} item={item} />
+            ))}
           <View className="p-4 mb-20">
             <View className="bg-white rounded-2xl shadow-lg p-2">
               <TextInput

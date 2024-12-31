@@ -25,7 +25,7 @@ export default function Singleevent() {
   const [showdeletemodal, setShowdeletemodal] = useState(false);
   const date = new Date();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState([]);
   const [loading, setLoading] = useState(false);
   console.log(date);
   useFocusEffect(
@@ -42,6 +42,7 @@ export default function Singleevent() {
         .eq("id", id);
       console.log(data);
       setEventdata(data[0]);
+      setComment(data[0].comments.comments);
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +54,15 @@ export default function Singleevent() {
     } catch (error) {
       console.log(error);
     }
+  };
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -111,9 +121,9 @@ export default function Singleevent() {
 
             {/* Comments Section */}
             <View className="mt-6">
-              {/* <Text className="text-xl font-semibold text-gray-800 mb-4">
+              <Text className="text-xl font-semibold text-gray-800 mb-4">
                 Comments
-              </Text> */}
+              </Text>
 
               {/* Comment Input */}
               {/* <View className="flex-row items-center gap-x-2 mb-4">
@@ -132,33 +142,74 @@ export default function Singleevent() {
               </View> */}
 
               {/* Comments List */}
-              {/* {loading ? (
-                <ActivityIndicator size="large" color="#4b5563" />
-              ) : (
-                <View className="space-y-4">
-                  {eventData.comments.map((item) => (
-                    <View key={item.id} className="bg-gray-50 p-3 rounded-lg">
-                      <View className="flex-row justify-between items-center mb-1">
-                        <View className="flex-row items-center">
-                          <Text className="font-medium text-gray-800">
-                            {item.user}
-                          </Text>
-                          <Text className="text-sm text-gray-500 ml-2">
-                            {item.timestamp}
+              <View className="w-full max-w-3xl mx-auto">
+                {loading ? (
+                  <View className="flex items-center justify-center py-8">
+                    <ActivityIndicator size="large" className="text-gray-600" />
+                  </View>
+                ) : (
+                  <View className="space-y-6 mb-20">
+                    {comment.map((item, index) => (
+                      <View
+                        key={index}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                      >
+                        {/* Comment Header */}
+                        <View className="p-4 bg-gray-50 border-b border-gray-100">
+                          <View className="flex-row justify-between items-center">
+                            <View className="flex-row items-center space-x-2">
+                              <View className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                <Text className="text-sm font-medium text-gray-600">
+                                  {item.author[0].toUpperCase()}
+                                </Text>
+                              </View>
+                              <View>
+                                <Text className="font-semibold text-gray-800">
+                                  {item.author}
+                                </Text>
+                                <Text className="text-xs text-gray-500">
+                                  {formatTimeAgo(item.timestamp)}
+                                </Text>
+                              </View>
+                            </View>
+
+                            {/* <TouchableOpacity
+                              onPress={() => onDeleteComment(item.id)}
+                              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            >
+                              <AntDesign
+                                name="trash"
+                                size={16}
+                                className="text-red-500"
+                              />
+                            </TouchableOpacity> */}
+                          </View>
+                        </View>
+
+                        {/* Comment Body */}
+                        <View className="p-4">
+                          {item.message && (
+                            <Text className="text-gray-600 font-medium mb-2">
+                              {item.message}
+                            </Text>
+                          )}
+                          <Text className="text-gray-700 leading-relaxed">
+                            {item.text}
                           </Text>
                         </View>
-                        <TouchableOpacity
-                          onPress={() => handleDeleteComment(item.id)}
-                          className="p-1"
-                        >
-                          <AntDesign name="delete" size={18} color="#ef4444" />
-                        </TouchableOpacity>
                       </View>
-                      <Text className="text-gray-700">{item.text}</Text>
-                    </View>
-                  ))}
-                </View>
-              )} */}
+                    ))}
+
+                    {comment.length === 0 && (
+                      <View className="py-8 text-center">
+                        <Text className="text-gray-500">
+                          No comments yet. Be the first to comment!
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
             </View>
           </View>
 
