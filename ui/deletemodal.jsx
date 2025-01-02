@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
 const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
   return (
     <Modal

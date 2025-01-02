@@ -94,6 +94,11 @@ export default function Add() {
       console.log(data, error);
       setShowStartTime(false);
       setShowEndTime(false);
+
+      const { citydata, cityerror } = await supabase
+        .from("cities")
+        .insert([{ cityname: city }])
+        .select();
     } catch (error) {
       console.log(error);
     }
@@ -276,7 +281,9 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{formatTimeAgo(startDate)}</Text>
+                  <Text className="text-gray-600">
+                    {formatTimeAgo(startDate)}
+                  </Text>
                 </View>
                 <View className="flex-row items-center">
                   <FontAwesome5
@@ -285,7 +292,9 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{formatTimeAgo(endDate)}</Text>
+                  <Text className="text-gray-600">
+                    {formatTimeAgo(endDate)}
+                  </Text>
                 </View>
               </View>
             )}

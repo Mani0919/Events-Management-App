@@ -12,6 +12,9 @@ export default function Root() {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="cityselection" options={{
+          headerShown: false,
+        }}/>
       </Stack>
     </>
   );
