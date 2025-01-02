@@ -15,6 +15,10 @@ export default function Root() {
         <Stack.Screen name="singleevent" options={{
           headerShown:false
         }}/>
+        <Stack.Screen name="searchevent" options={{
+          headerShown:true,
+          title:"Search Event"
+        }}/>
       </Stack>
     </>
   );

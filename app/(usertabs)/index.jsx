@@ -171,6 +171,7 @@ export default function Index() {
               className="flex-1 ml-2 text-base"
               placeholder="Search events..."
               placeholderTextColor="#666"
+              onFocus={() => router.push("/(usertabs)/events/searchevent")}
             />
           </View>
         </View>
