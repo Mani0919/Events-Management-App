@@ -125,9 +125,9 @@ export default function UserProfile() {
           </Text>
           <MenuButton
             icon="person"
-            title="Edit Profile"
+            title=" Update Profile Photo"
             subtitle="Update your personal information"
-            onPress={() => router.push("/(tabs)/profile/edit")}
+            onPress={openImagePicker}
             color="#3B82F6"
             bgColor="bg-blue-50"
           />

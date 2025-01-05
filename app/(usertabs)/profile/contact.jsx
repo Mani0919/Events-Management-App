@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, SafeAreaView, Linking } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 
 export default function ContactUs() {
-  const email = "support@eventmanager.com";
+  const email = "manikanta555@gmail.com";
   
   const handleEmailPress = () => {
     Linking.openURL(`mailto:${email}?subject=Support Request&body=Hi,`);
