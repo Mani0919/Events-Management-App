@@ -107,7 +107,7 @@ export default function EventsScreen() {
         marginHorizontal: 16,
       }}
       onPress={()=>router.push({
-        pathname:"/(usertabs)/events/singleevent",
+        pathname:"/(usertabs)/events/usersingleevent",
         params:{id:item.id}
       })}
     >

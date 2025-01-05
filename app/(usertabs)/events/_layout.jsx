@@ -12,8 +12,8 @@ export default function Root() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="singleevent" options={{
-          headerShown:false
+        <Stack.Screen name="usersingleevent" options={{
+          headerShown:true
         }}/>
         <Stack.Screen name="searchevent" options={{
           headerShown:true,
