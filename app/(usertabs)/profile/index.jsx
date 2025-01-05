@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAdminContext } from "../../../context/authcontext";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
+import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
 
 const MenuButton = ({
   icon,
@@ -61,16 +62,20 @@ export default function UserProfile() {
 
     if (!result.canceled) {
       const uri = result.assets[0]?.uri;
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .update({ photo: uri })
-          .eq("email", userProfile.email)
-          .select();
-        console.log(data, error);
-        await profiledetails(userProfile.email);
-      } catch (error) {
-        console.log(error);
+      const imageUrl = await UploadToCloudinary(uri);
+      console.log("email",userProfile.email)
+      if (imageUrl) {
+        try {
+          const { data, error } = await supabase
+            .from("users")
+            .update({ photo: imageUrl })
+            .eq("email", userProfile.email)
+            .select();
+          console.log(data, error);
+          await profiledetails(userProfile.email);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -105,9 +110,9 @@ export default function UserProfile() {
               <Text className="text-2xl font-bold text-gray-800 mt-4">
                 {userProfile?.name}
               </Text>
-              <Text className="text-gray-500 text-lg">{userProfile?.email}</Text>
-
-         
+              <Text className="text-gray-500 text-lg">
+                {userProfile?.email}
+              </Text>
             </View>
           </View>
         </View>

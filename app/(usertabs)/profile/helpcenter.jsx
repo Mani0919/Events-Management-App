@@ -82,7 +82,7 @@ export default function HelpCenter() {
           <HelpSection
             title="Contact Support"
             icon="headset"
-            onPress={() => router.push("/(tabs)/profile/contact")}
+            onPress={() => router.push("/(usertabs)/profile/contact")}
           />
           <HelpSection
             title="App Features"
@@ -105,7 +105,7 @@ export default function HelpCenter() {
           <Text className="text-gray-600 mb-4">Our team is here to assist you</Text>
           <TouchableOpacity 
             className="bg-blue-500 py-3 rounded-lg"
-            onPress={() => router.push("/(tabs)/profile/contact")}
+            onPress={() => router.push("/(usertabs)/profile/contact")}
           >
             <Text className="text-white text-center font-semibold">Contact Support</Text>
           </TouchableOpacity>

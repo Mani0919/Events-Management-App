@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
 import { useAdminContext } from "../../../context/authcontext";
+import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
 export default function Screen1() {
   const [email, setEmail] = useState("");
   const { profiledata, profiledetails } = useAdminContext();
@@ -42,16 +43,19 @@ export default function Screen1() {
         console.log(uri);
         // setImage(uri);
         console.log(email);
-        try {
-          const { data, error } = await supabase
-            .from("Admin")
-            .update({ photo: uri })
-            .eq("Email", email)
-            .select();
-          console.log(data, error);
-          await profiledetails(email);
-        } catch (error) {
-          console.log(error);
+        const imageUrl = await UploadToCloudinary(uri);
+        if (imageUrl) {
+          try {
+            const { data, error } = await supabase
+              .from("Admin")
+              .update({ photo: imageUrl })
+              .eq("Email", email)
+              .select();
+            console.log(data, error);
+            await profiledetails(email);
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
     } catch (error) {
@@ -121,7 +125,9 @@ export default function Screen1() {
           <MenuButton
             icon="star-outline"
             title="Testimonials"
-            onPress={() => {router.push("/allusers/testimonals")}}
+            onPress={() => {
+              router.push("/allusers/testimonals");
+            }}
           />
         </View>
 
