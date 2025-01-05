@@ -13,7 +13,7 @@ export default function Root() {
           }}
         />
         <Stack.Screen name="usersingleevent" options={{
-          headerShown:true
+          headerShown:false
         }}/>
         <Stack.Screen name="searchevent" options={{
           headerShown:true,

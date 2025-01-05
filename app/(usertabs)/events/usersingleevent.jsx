@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Share,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -20,6 +21,8 @@ import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import WishlistButton from "../../../ui/wishlisticon";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import * as Sharing from "expo-sharing";
+import Ionicons from '@expo/vector-icons/Ionicons';
 export default function SingleEvent() {
   const { id } = useLocalSearchParams();
   const [data, setData] = useState({});
@@ -27,7 +30,7 @@ export default function SingleEvent() {
   const [newComment, setNewComment] = useState("");
   const scrollY = useRef(new Animated.Value(0)).current;
   const [username, setUsername] = useState("");
-  const [userEmail,setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [commentsdata, setCommentsdata] = useState([]);
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 100],
@@ -79,11 +82,13 @@ export default function SingleEvent() {
         <AntDesign
           name="arrowleft"
           size={30}
-          color="white"
+          color="black"
           onPress={() => router.back()}
         />
-
-        <WishlistButton onSelect={UpdateWishlist}/>
+        <View className="flex flex-row items-center gap-x-2">
+          <Ionicons name="share-social-outline" size={24} color="white" onPress={handleShare}/>
+          <WishlistButton onSelect={UpdateWishlist} />
+        </View>
       </View>
       <View className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
         <Text className="absolute bottom-6 left-4 text-3xl font-bold text-white">
@@ -199,7 +204,7 @@ export default function SingleEvent() {
         user_email: userEmail, // Ensure this is correct
         new_event: { eventid: id }, // Ensure `id` is not undefined or null
       });
-  
+
       if (error) {
         console.error("Error appending to wishlist:", error);
       } else {
@@ -209,11 +214,34 @@ export default function SingleEvent() {
       console.error("Error in UpdateWishlist:", error);
     }
   };
-  
-  
-  
+
+  const handleShare = async () => {
+    try {
+      const message = `Check out this event: ${data.eventname} on ${data.startdate} at ${data.location}, ${data.city}`;
+
+      // Example image URI, replace it with your image's actual URI
+      const imageUrl = data.photo; // Ensure this is a valid URI (e.g., https://example.com/image.jpg)
+
+      if (Platform.OS === "android") {
+        // Android requires combining message and URL in `message`
+        await Share.share({
+          message: `${message}\n\n${imageUrl}`,
+          title: data.eventname,
+        });
+      } else {
+        // iOS allows separate `url` and `message`
+        await Share.share({
+          message,
+          url: imageUrl,
+          title: data.eventname,
+        });
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView className="flex-1 bg-gray-100 ">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "padding"}
         className="flex-1"
@@ -256,6 +284,7 @@ export default function SingleEvent() {
               </View>
             </View>
           </View>
+
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

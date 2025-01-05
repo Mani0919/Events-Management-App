@@ -102,6 +102,12 @@ export default function Index() {
     <TouchableOpacity
       key={item.id}
       className="flex-row bg-white p-3 rounded-xl mb-3 mx-3 shadow-sm"
+      onPress={() =>
+        router.push({
+          pathname: "/(usertabs)/events/usersingleevent",
+          params: { id: item.id },
+        })
+      }
     >
       <Image source={{ uri: item.photo }} className="w-24 h-24 rounded-xl" />
       <View className="flex-1 ml-3 justify-between">
@@ -159,11 +165,11 @@ export default function Index() {
 
             <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-gray-50">
               {/* <MaterialIcons name="notifications" size={24} color="#1F2937" /> */}
-              <Bell/>
+              <Bell />
             </TouchableOpacity>
           </View>
         </View>
-       
+
         <View className="mx-3 mt-2">
           <View className="flex-row items-center bg-gray-100 px-4 py-3 rounded-xl mb-4 shadow-sm">
             <AntDesign name="search1" size={20} color="gray" />
