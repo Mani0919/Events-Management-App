@@ -8,13 +8,16 @@ export const useAdminContext = () => useContext(AuthContext);
 export const Context = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState("");
   const [profiledata, setProfileData] = useState({});
+  const [userProfile,setUserProfile] = useState({});
   useEffect(() => {
     async function getIsAdmin() {
       const res = await AsyncStorage.getItem("isAdmin");
       const ress = await AsyncStorage.getItem("adminEmail");
+      const resss = await AsyncStorage.getItem("userEmail");
       console.log("context data", res);
       profiledetails(ress);
       setIsAdmin(res);
+      userProfileData(resss);
     }
     getIsAdmin();
   }, []);
@@ -30,8 +33,20 @@ export const Context = ({ children }) => {
       console.log(error);
     }
   }
+  async function userProfileData(email) {
+    try {
+      let { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email);
+      console.log("profile dataaaa", data);
+      setUserProfile(data[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
-    <AuthContext.Provider value={{ isAdmin, profiledata,profiledetails }}>
+    <AuthContext.Provider value={{ isAdmin, profiledata,profiledetails,userProfile ,userProfileData }}>
       {children}
     </AuthContext.Provider>
   );

@@ -14,30 +14,57 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
   const { bottom } = useSafeAreaInsets();
   const { profiledata } = useAdminContext();
+  const [users,setUsers] = React.useState("")
+  const [events,setEvents] = React.useState("")
+  const [testimonals,setTestimonals] = React.useState("")
   console.log("home", profiledata);
   useEffect(() => {
     async function fun() {
       const res = await AsyncStorage.getItem("isAdmin");
-      console.log("uskjhdjhgjdghj", res);
     }
     fun();
+    getUers()
+    getEvents()
+    getTestimonlas()
   }, []);
+  async function getUers() {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+    console.log(data, error);
+    setUsers(data.length)
+  }
+  async function getEvents() {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+    console.log(data, error);
+    setEvents(data.length)
+  }
+  async function getTestimonlas()
+  {
+    const { data, error } = await supabase
+      .from("testimonals")
+      .select("*")
+    console.log(data, error);
+    setTestimonals(data.length)
+  }
   const stats = [
     {
       icon: <FontAwesome6 name="users" size={32} color="#6366F1" />,
-      count: 10,
+      count: users,
       label: "Users",
       route: "/allusers"
     },
     {
       icon: <MaterialIcons name="event" size={32} color="#8B5CF6" />,
-      count: 10,
+      count: events,
       label: "Events",
       route: "/(admintabs)/events"
     },
     {
       icon: <MaterialIcons name="reviews" size={32} color="#EC4899" />,
-      count: 10,
+      count: testimonals,
       label: "Testimonials",
       route: "/allusers/testimonals"
     }

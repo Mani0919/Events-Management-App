@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TouchableOpacity, View, Animated } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const WishlistButton = ({ initialState = false, onToggle, style }) => {
+const WishlistButton = ({ initialState = false, onToggle, style,onSelect }) => {
   const [isWishlisted, setIsWishlisted] = useState(initialState);
   const [scaleValue] = useState(new Animated.Value(1));
 
@@ -39,7 +39,7 @@ const WishlistButton = ({ initialState = false, onToggle, style }) => {
         }}
       >
         <TouchableOpacity
-          onPress={handlePress}
+          onPress={onSelect}
           className={`p-3 rounded-full ${
             isWishlisted 
               ? "bg-white" 

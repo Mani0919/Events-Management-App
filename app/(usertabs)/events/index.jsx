@@ -13,6 +13,7 @@ import EventsHeader from "../../../ui/eventheader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EventsScreen() {
   const [data, setData] = useState([]);
@@ -25,7 +26,13 @@ export default function EventsScreen() {
   const searchBarOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    getEvents();
+    async function getCity()
+    {
+     const res=await AsyncStorage.getItem("city");
+     getEvents(res);
+    }
+    getCity()
+   
   }, []);
 
   // Animation functions
@@ -67,9 +74,11 @@ export default function EventsScreen() {
     setFilteredData(filtered);
   };
 
-  async function getEvents() {
+  async function getEvents(city) {
     try {
-      let { data: events, error } = await supabase.from("events").select("*");
+      console.log(city)
+      let { data: events, error } = await supabase.from("events").select("*").eq("city",city);
+      console.log(events);
       if (error) throw error;
       setData(events);
       setFilteredData(events);

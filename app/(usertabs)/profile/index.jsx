@@ -1,159 +1,202 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
+  SafeAreaView,
   TouchableOpacity,
+  Image,
   ScrollView,
-  ImageBackground,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAdminContext } from "../../../context/authcontext";
+import * as ImagePicker from "expo-image-picker";
+import { supabase } from "../../../utlis/supabase";
+import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
 
-const ProfileScreen = ({ navigation }) => {
-  const handleLogout = () => {
-    // Add your logout logic here
-    router.push("/auth")
+const MenuButton = ({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  color = "#4B5563",
+  bgColor = "bg-gray-50",
+}) => (
+  <TouchableOpacity
+    className="flex flex-row justify-between items-center p-4 bg-white rounded-xl mb-3 shadow-sm"
+    onPress={onPress}
+  >
+    <View className="flex flex-row items-center space-x-4">
+      <View
+        className={`w-12 h-12 ${bgColor} rounded-full items-center justify-center`}
+      >
+        <Ionicons name={icon} size={24} color={color} />
+      </View>
+      <View>
+        <Text className="text-gray-800 text-lg font-medium">{title}</Text>
+        {subtitle && <Text className="text-gray-500 text-sm">{subtitle}</Text>}
+      </View>
+    </View>
+    <MaterialIcons name="arrow-forward-ios" size={20} color={color} />
+  </TouchableOpacity>
+);
+
+export default function UserProfile() {
+  const router = useRouter();
+  const { userProfile, profiledetails } = useAdminContext();
+  const [userRating, setUserRating] = useState(0);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("userEmail");
+    router.push("/auth");
+  };
+
+  const openImagePicker = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0]?.uri;
+      const imageUrl = await UploadToCloudinary(uri);
+      console.log("email",userProfile.email)
+      if (imageUrl) {
+        try {
+          const { data, error } = await supabase
+            .from("users")
+            .update({ photo: imageUrl })
+            .eq("email", userProfile.email)
+            .select();
+          console.log(data, error);
+          await profiledetails(userProfile.email);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
   };
 
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView className="flex-1 bg-gray-50" >
-        {/* Profile Header with Background */}
-        <View className="h-60">
-          <ImageBackground
-            source={{ uri: "https://via.placeholder.com/800x400" }}
-            className="h-full w-full"
-            style={{ backgroundColor: "rgba(79, 70, 229, 0.9)" }}
-          >
-            <View className="absolute inset-0 bg-indigo-600/100" />
-            <View className="items-center justify-end h-full pb-20">
-              <View className="relative">
-                <Image
-                  source={{ uri: "https://via.placeholder.com/150" }}
-                  className="w-28 h-28 rounded-full border-4 border-white"
-                />
-                <TouchableOpacity
-                  className="absolute bottom-0 right-0 bg-indigo-500 p-3 rounded-full border-4 border-white"
-                  onPress={() => navigation.navigate("UploadProfile")}
-                >
-                  <MaterialCommunityIcons
-                    name="camera"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ImageBackground>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <ScrollView className="flex-1">
+        {/* Hero Section with Background */}
+        <View className="bg-blue-400 h-48">
+          <View className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 to-transparent" />
         </View>
 
-        {/* User Info Card */}
-        <View className="bg-white -mt-10 mx-4 rounded-xl shadow-lg p-6">
-          <View className="items-center">
-            <Text className="text-2xl font-bold text-gray-800">John Doe</Text>
-            <Text className="text-gray-500 mt-1">john.doe@example.com</Text>
-          
+        {/* Profile Info Section */}
+        <View className="px-4 -mt-20">
+          <View className="bg-white rounded-2xl p-6 shadow-lg">
+            <View className="items-center">
+              <View className="relative">
+                <View className="w-24 h-24 rounded-full border-4 border-white shadow-md">
+                  <Image
+                    source={{ uri: userProfile?.photo }}
+                    className="w-full h-full rounded-full"
+                  />
+                </View>
+                <TouchableOpacity
+                  className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-2"
+                  onPress={openImagePicker}
+                >
+                  <MaterialIcons name="photo-camera" size={18} color="white" />
+                </TouchableOpacity>
+              </View>
+
+              <Text className="text-2xl font-bold text-gray-800 mt-4">
+                {userProfile?.name}
+              </Text>
+              <Text className="text-gray-500 text-lg">
+                {userProfile?.email}
+              </Text>
+            </View>
           </View>
         </View>
 
-        {/* Profile Options */}
-        <View className="mt-6 mx-4">
-          <TouchableOpacity
-            className="flex-row items-center bg-white p-4 rounded-xl mb-3 shadow-sm"
-            onPress={() => navigation.navigate("EditProfile")}
-          >
-            <View className="bg-indigo-100 p-3 rounded-lg">
-              <MaterialCommunityIcons
-                name="account-edit"
-                size={24}
-                color="#4f46e5"
-              />
-            </View>
-            <View className="flex-1 ml-4">
-              <Text className="text-gray-800 font-semibold text-lg">
-                Edit Profile
-              </Text>
-              <Text className="text-gray-500 text-sm">
-                Update your personal details
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color="#9ca3af"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex-row items-center bg-white p-4 rounded-xl mb-3 shadow-sm"
-            onPress={() => navigation.navigate("Feedback")}
-          >
-            <View className="bg-purple-100 p-3 rounded-lg">
-              <MaterialCommunityIcons
-                name="message-text"
-                size={24}
-                color="#7c3aed"
-              />
-            </View>
-            <View className="flex-1 ml-4">
-              <Text className="text-gray-800 font-semibold text-lg">
-                Feedback
-              </Text>
-              <Text className="text-gray-500 text-sm">
-                Share your thoughts with us
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color="#9ca3af"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex-row items-center bg-white p-4 rounded-xl mb-3 shadow-sm"
-            onPress={() => navigation.navigate("Rating")}
-          >
-            <View className="bg-yellow-100 p-3 rounded-lg">
-              <MaterialCommunityIcons name="star" size={24} color="#eab308" />
-            </View>
-            <View className="flex-1 ml-4">
-              <Text className="text-gray-800 font-semibold text-lg">
-                Rate Us
-              </Text>
-              <Text className="text-gray-500 text-sm">
-                Tell us how we're doing
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color="#9ca3af"
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Logout Button */}
-        <View className="px-4 mt-4 mb-8 ">
-          <TouchableOpacity
-            className="  py-4 "
-            onPress={handleLogout}
-          >
-            <View className="flex-row items-center justify-center">
-              <MaterialCommunityIcons name="logout" size={24} color="red" />
-              <Text className="ml-2 text-black font-bold text-lg">Logout</Text>
-            </View>
-          </TouchableOpacity>
-
-          <Text className="text-center text-gray-400 text-sm mt-6">
-            Version 1.0.0
+        {/* Menu Sections */}
+        <View className="px-4 mt-6">
+          {/* Account Section */}
+          <Text className="text-lg font-bold text-gray-800 mb-3 px-1">
+            Account Settings
           </Text>
+          <MenuButton
+            icon="person"
+            title="Edit Profile"
+            subtitle="Update your personal information"
+            onPress={() => router.push("/(tabs)/profile/edit")}
+            color="#3B82F6"
+            bgColor="bg-blue-50"
+          />
+          <MenuButton
+            icon="star"
+            title="My Feedback"
+            subtitle="Give feddback and ratings"
+            onPress={() => router.push("/(usertabs)/profile/feedback")}
+            color="#F59E0B"
+            bgColor="bg-yellow-50"
+          />
+          <MenuButton
+            icon="heart"
+            title="Wishlist"
+            subtitle="Your saved items"
+            onPress={() => router.push("/(tabs)/profile/wishlist")}
+            color="#EF4444"
+            bgColor="bg-red-50"
+          />
+
+          {/* Support Section */}
+          <Text className="text-lg font-bold text-gray-800 mb-3 mt-6 px-1">
+            Support
+          </Text>
+          <MenuButton
+            icon="help-circle"
+            title="Help Center"
+            subtitle="Get help with your purchases"
+            onPress={() => router.push("/(usertabs)/profile/helpcenter")}
+            color="#8B5CF6"
+            bgColor="bg-purple-50"
+          />
+          <MenuButton
+            icon="chatbox"
+            title="Contact Us"
+            subtitle="Reach out to our support team"
+            onPress={() => router.push("/(usertabs)/profile/contact")}
+            color="#F59E0B"
+            bgColor="bg-yellow-50"
+          />
+
+          {/* Logout Button */}
+          <View className="mt-6 mb-8">
+            <TouchableOpacity
+              className="bg-white p-4 rounded-xl flex-row items-center justify-between shadow-sm"
+              onPress={handleLogout}
+            >
+              <View className="flex-row items-center space-x-4">
+                <View className="w-12 h-12 bg-red-50 rounded-full items-center justify-center">
+                  <Ionicons name="log-out" size={24} color="#EF4444" />
+                </View>
+                <View>
+                  <Text className="text-red-500 text-lg font-medium">
+                    Logout
+                  </Text>
+                  <Text className="text-gray-500 text-sm">
+                    Sign out of your account
+                  </Text>
+                </View>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={20}
+                color="#EF4444"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default ProfileScreen;
+}

@@ -13,8 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePickerComponent from "../../../ui/datetimepicker";
 import { supabase } from "../../../utlis/supabase";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { MaterialIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
 export default function Add() {
   const [image, setImage] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -46,8 +47,14 @@ export default function Add() {
       // If user selects an image
       if (!result.canceled) {
         const uri = result.assets[0]?.uri; // File URI
-        console.log(uri);
-        setImage(uri);
+        console.log("uri", uri);
+        const imageUrl = await UploadToCloudinary(uri);
+
+        if (imageUrl) {
+          console.log("Image uploaded successfully:", imageUrl);
+          setImage(imageUrl);
+          // Perform any additional actions (e.g., storing the URL in a database)
+        }
       }
     } catch (error) {
       console.error("Error uploading profile photo:", error.response || error);
@@ -94,6 +101,14 @@ export default function Add() {
       console.log(data, error);
       setShowStartTime(false);
       setShowEndTime(false);
+
+      const { citydata, cityerror } = await supabase
+        .from("cities")
+        .insert([{ cityname: city }])
+        .select();
+      if (citydata) {
+        router.back();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -136,6 +151,9 @@ export default function Add() {
         .eq("id", id)
         .select();
       console.log(data);
+      if (data) {
+        router.back();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -276,7 +294,9 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{formatTimeAgo(startDate)}</Text>
+                  <Text className="text-gray-600">
+                    {formatTimeAgo(startDate)}
+                  </Text>
                 </View>
                 <View className="flex-row items-center">
                   <FontAwesome5
@@ -285,7 +305,9 @@ export default function Add() {
                     color="#4B5563"
                     style={{ marginRight: 6 }}
                   />
-                  <Text className="text-gray-600">{formatTimeAgo(endDate)}</Text>
+                  <Text className="text-gray-600">
+                    {formatTimeAgo(endDate)}
+                  </Text>
                 </View>
               </View>
             )}

@@ -58,8 +58,9 @@ export default function Index() {
                 },
               ]);
             }
-            AsyncStorage.setItem("name", userInfo?.data?.user?.name);
-            router.push("/(usertabs)");
+            // AsyncStorage.setItem("name", userInfo?.data?.user?.name);
+            AsyncStorage.setItem("userEmail", userInfo?.data?.user?.email);
+            router.push("/auth/user/cityselection");
           } catch (error) {
             setError("Failed to create user profile");
             console.log("error", error);

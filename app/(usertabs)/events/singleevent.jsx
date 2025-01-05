@@ -27,6 +27,7 @@ export default function SingleEvent() {
   const [newComment, setNewComment] = useState("");
   const scrollY = useRef(new Animated.Value(0)).current;
   const [username, setUsername] = useState("");
+  const [userEmail,setUserEmail] = useState("");
   const [commentsdata, setCommentsdata] = useState([]);
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 100],
@@ -42,6 +43,8 @@ export default function SingleEvent() {
   async function getEvent() {
     try {
       const res = await AsyncStorage.getItem("name");
+      const resss = await AsyncStorage.getItem("userEmail");
+      setUserEmail(resss);
       setUsername(res);
       let { data: events, error } = await supabase
         .from("events")
@@ -80,7 +83,7 @@ export default function SingleEvent() {
           onPress={() => router.back()}
         />
 
-        <WishlistButton />
+        <WishlistButton onSelect={UpdateWishlist}/>
       </View>
       <View className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
         <Text className="absolute bottom-6 left-4 text-3xl font-bold text-white">
@@ -188,6 +191,27 @@ export default function SingleEvent() {
     }
   };
 
+  console.log("Event ID:", id);
+
+  const UpdateWishlist = async () => {
+    try {
+      const { data, error } = await supabase.rpc("append_to_wishlist", {
+        user_email: userEmail, // Ensure this is correct
+        new_event: { eventid: id }, // Ensure `id` is not undefined or null
+      });
+  
+      if (error) {
+        console.error("Error appending to wishlist:", error);
+      } else {
+        console.log("Appended to wishlist:", data);
+      }
+    } catch (error) {
+      console.error("Error in UpdateWishlist:", error);
+    }
+  };
+  
+  
+  
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <KeyboardAvoidingView
