@@ -11,63 +11,57 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAdminContext } from "../../context/authcontext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import img from "../../assets/images/profile.png";
 export default function Index() {
   const { bottom } = useSafeAreaInsets();
   const { profiledata } = useAdminContext();
-  const [users,setUsers] = React.useState("")
-  const [events,setEvents] = React.useState("")
-  const [testimonals,setTestimonals] = React.useState("")
+  const [users, setUsers] = React.useState("");
+  const [events, setEvents] = React.useState("");
+  const [testimonals, setTestimonals] = React.useState("");
   console.log("home", profiledata);
   useEffect(() => {
     async function fun() {
       const res = await AsyncStorage.getItem("isAdmin");
     }
     fun();
-    getUers()
-    getEvents()
-    getTestimonlas()
+    getUers();
+    getEvents();
+    getTestimonlas();
   }, []);
   async function getUers() {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
+    const { data, error } = await supabase.from("users").select("*");
     console.log(data, error);
-    setUsers(data.length)
+    setUsers(data.length);
   }
   async function getEvents() {
-    const { data, error } = await supabase
-      .from("events")
-      .select("*")
+    const { data, error } = await supabase.from("events").select("*");
     console.log(data, error);
-    setEvents(data.length)
+    setEvents(data.length);
   }
-  async function getTestimonlas()
-  {
-    const { data, error } = await supabase
-      .from("testimonals")
-      .select("*")
+  async function getTestimonlas() {
+    const { data, error } = await supabase.from("testimonals").select("*");
     console.log(data, error);
-    setTestimonals(data.length)
+    setTestimonals(data.length);
   }
   const stats = [
     {
       icon: <FontAwesome6 name="users" size={32} color="#6366F1" />,
       count: users,
       label: "Users",
-      route: "/allusers"
+      route: "/allusers",
     },
     {
       icon: <MaterialIcons name="event" size={32} color="#8B5CF6" />,
       count: events,
       label: "Events",
-      route: "/(admintabs)/events"
+      route: "/(admintabs)/events",
     },
     {
       icon: <MaterialIcons name="reviews" size={32} color="#EC4899" />,
       count: testimonals,
       label: "Testimonials",
-      route: "/allusers/testimonals"
-    }
+      route: "/allusers/testimonals",
+    },
   ];
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -89,10 +83,14 @@ export default function Index() {
 
             {/* Profile Image */}
             <View className="w-16 h-16 rounded-full border-2 border-white/20 overflow-hidden bg-white/10">
-              <Image
-                source={{ uri: profiledata?.photo }}
-                className="w-full h-full"
-              />
+              {profiledata?.photo ? (
+                <Image
+                  source={{ uri: profiledata?.photo }}
+                  className="w-full h-full"
+                />
+              ) : (
+                <Image source={img} className="w-full h-full rounded-full" />
+              )}
             </View>
           </View>
         </View>
@@ -107,11 +105,11 @@ export default function Index() {
               key={index}
               className="flex-1 min-w-[45%] bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
               style={{
-                shadowColor: '#000',
+                shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.1,
                 shadowRadius: 8,
-                elevation: 2
+                elevation: 2,
               }}
               onPress={() => router.push(stat.route)}
             >
@@ -121,9 +119,7 @@ export default function Index() {
               <Text className="text-2xl font-bold text-gray-800">
                 {stat.count}
               </Text>
-              <Text className="text-sm text-gray-500 mt-1">
-                {stat.label}
-              </Text>
+              <Text className="text-sm text-gray-500 mt-1">{stat.label}</Text>
             </TouchableOpacity>
           ))}
         </View>

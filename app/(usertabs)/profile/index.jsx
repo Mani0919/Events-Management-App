@@ -14,7 +14,7 @@ import { useAdminContext } from "../../../context/authcontext";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
 import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
-
+import img from "../../../assets/images/profile.png";
 const MenuButton = ({
   icon,
   title,
@@ -63,7 +63,7 @@ export default function UserProfile() {
     if (!result.canceled) {
       const uri = result.assets[0]?.uri;
       const imageUrl = await UploadToCloudinary(uri);
-      console.log("email",userProfile.email)
+      console.log("email", userProfile.email);
       if (imageUrl) {
         try {
           const { data, error } = await supabase
@@ -94,10 +94,17 @@ export default function UserProfile() {
             <View className="items-center">
               <View className="relative">
                 <View className="w-24 h-24 rounded-full border-4 border-white shadow-md">
-                  <Image
-                    source={{ uri: userProfile?.photo }}
-                    className="w-full h-full rounded-full"
-                  />
+                  {userProfile?.photo ? (
+                    <Image
+                      source={{ uri: userProfile?.photo }}
+                      className="w-full h-full rounded-full"
+                    />
+                  ) : (
+                    <Image
+                      source={img}
+                      className="w-full h-full rounded-full"
+                    />
+                  )}
                 </View>
                 <TouchableOpacity
                   className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-2"
@@ -143,7 +150,7 @@ export default function UserProfile() {
             icon="heart"
             title="Wishlist"
             subtitle="Your saved items"
-            onPress={() => router.push("/(tabs)/profile/wishlist")}
+            onPress={() => router.push("/(usertabs)/profile/whislist")}
             color="#EF4444"
             bgColor="bg-red-50"
           />

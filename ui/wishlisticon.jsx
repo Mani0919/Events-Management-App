@@ -39,7 +39,7 @@ const WishlistButton = ({ initialState = false, onToggle, style,onSelect }) => {
         }}
       >
         <TouchableOpacity
-          onPress={handlePress}
+          onPress={onSelect}
           className={`p-3 rounded-full ${
             isWishlisted 
               ? "bg-white" 

@@ -1,7 +1,7 @@
 import { View, Text, Animated } from "react-native";
 import React, { useRef, useEffect } from "react";
 import { Redirect, Stack, Tabs } from "expo-router";
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAdminContext } from "../../context/authcontext";
 
 const TabIcon = ({ focused, color, children }) => {
@@ -19,17 +19,17 @@ const TabIcon = ({ focused, color, children }) => {
         toValue: focused ? 1 : 0.7,
         duration: 200,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
   }, [focused]);
 
   return (
-    <Animated.View 
+    <Animated.View
       style={{
         transform: [{ scale: scaleAnimation }],
         opacity: opacityAnimation,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       {children}
@@ -46,11 +46,11 @@ export default function Root() {
             height: 65,
             paddingBottom: 10,
             paddingTop: 10,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: "#FFFFFF",
             borderTopWidth: 1,
-            borderTopColor: 'rgba(0, 0, 0, 0.1)',
+            borderTopColor: "rgba(0, 0, 0, 0.1)",
             elevation: 8,
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: {
               width: 0,
               height: -2,
@@ -58,12 +58,12 @@ export default function Root() {
             shadowOpacity: 0.1,
             shadowRadius: 3,
           },
-          tabBarActiveTintColor: '#9718DD',
-          tabBarInactiveTintColor: '#2C3550',
+          tabBarActiveTintColor: "#9718DD",
+          tabBarInactiveTintColor: "#2C3550",
           headerShown: false,
           tabBarLabelStyle: {
             fontSize: 12,
-            fontWeight: '500',
+            fontWeight: "500",
             marginTop: 4,
           },
         }}
@@ -99,16 +99,27 @@ export default function Root() {
           }}
         />
         <Tabs.Screen
+          name="wishlist"
+          options={{
+            title: "Wishlists",
+            tabBarIcon: ({ focused, color }) => (
+              <TabIcon focused={focused} color={color}>
+                <MaterialCommunityIcons
+                  name="heart-outline"
+                  size={24}
+                  color={color}
+                />
+              </TabIcon>
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="map"
           options={{
             title: "Map",
             tabBarIcon: ({ focused, color }) => (
               <TabIcon focused={focused} color={color}>
-                <Ionicons
-                  name="location-outline"
-                  size={24}
-                  color={color}
-                />
+                <Ionicons name="location-outline" size={24} color={color} />
               </TabIcon>
             ),
           }}
@@ -119,11 +130,7 @@ export default function Root() {
             title: "Profile",
             tabBarIcon: ({ focused, color }) => (
               <TabIcon focused={focused} color={color}>
-                <Ionicons
-                  name="person-outline"
-                  size={24}
-                  color={color}
-                />
+                <Ionicons name="person-outline" size={24} color={color} />
               </TabIcon>
             ),
           }}

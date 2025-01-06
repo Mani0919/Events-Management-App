@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
 import { useAdminContext } from "../../../context/authcontext";
 import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
+import img from "../../../assets/images/profile.png";
 export default function Screen1() {
   const [email, setEmail] = useState("");
   const { profiledata, profiledetails } = useAdminContext();
@@ -86,10 +87,14 @@ export default function Screen1() {
           <View className="flex flex-row items-center space-x-4">
             <View className="relative">
               <View className="w-20 h-20 rounded-full border-2 border-blue-500 p-1">
-                <Image
-                  source={{ uri: profiledata.photo }}
-                  className="w-full h-full rounded-full"
-                />
+                {profiledata?.photo ? (
+                  <Image
+                    source={{ uri: profiledata?.photo }}
+                    className="w-full h-full rounded-full"
+                  />
+                ) : (
+                  <Image source={img} className="w-full h-full rounded-full" />
+                )}
               </View>
               <TouchableOpacity
                 className="absolute bottom-0 right-0 bg-blue-500 rounded-full p-1.5"

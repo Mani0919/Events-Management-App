@@ -12,18 +12,33 @@ export default function Root() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="feedback" options={{
-          headerShown: true,
-          title: "",
-        }}/>
-         <Stack.Screen name="helpcenter" options={{
-          headerShown: true,
-          title: "",
-        }}/>
-           <Stack.Screen name="contact" options={{
-          headerShown: true,
-          title: "Contact Us",
-        }}/>
+        <Stack.Screen
+          name="feedback"
+          options={{
+            headerShown: true,
+            title: "",
+          }}
+        />
+        <Stack.Screen
+          name="helpcenter"
+          options={{
+            headerShown: true,
+            title: "",
+          }}
+        />
+        <Stack.Screen
+          name="contact"
+          options={{
+            headerShown: true,
+            title: "Contact Us",
+          }}
+        />
+        <Stack.Screen
+          name="whislist"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </>
   );
