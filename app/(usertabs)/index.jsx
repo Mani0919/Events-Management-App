@@ -136,7 +136,11 @@ export default function Index() {
   const filteredCities = cities.filter((item) =>
     item.cityname.toLowerCase().includes(city?.toLowerCase())
   );
-
+  const handleCity = async (cityname) => {
+    setSelectedCity(cityname);
+    await AsyncStorage.setItem("city", cityname);
+    setModalVisible(false);
+  };
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -242,10 +246,7 @@ export default function Index() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    onPress={() => {
-                      setSelectedCity(item.cityname);
-                      setModalVisible(false);
-                    }}
+                    onPress={() => handleCity(item.cityname)}
                     className="py-3 border-b border-gray-200"
                   >
                     <Text className="text-lg">{item.cityname}</Text>

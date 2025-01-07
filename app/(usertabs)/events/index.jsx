@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import { supabase } from "../../../utlis/supabase";
 import EventsHeader from "../../../ui/eventheader";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -20,20 +20,21 @@ export default function EventsScreen() {
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showicon, setShowicon] = useState(true);
-  
+
   // Animation setup
   const searchBarHeight = useRef(new Animated.Value(0)).current;
   const searchBarOpacity = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    async function getCity()
-    {
-     const res=await AsyncStorage.getItem("city");
-     getEvents(res);
-    }
-    getCity()
-   
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCity();
+    }, [])
+  );
+  async function getCity() {
+    const res = await AsyncStorage.getItem("city");
+    console.log(res);
+    getEvents(res);
+  }
 
   // Animation functions
   const animateSearchBar = (show) => {
@@ -76,8 +77,11 @@ export default function EventsScreen() {
 
   async function getEvents(city) {
     try {
-      console.log(city)
-      let { data: events, error } = await supabase.from("events").select("*").eq("city",city);
+      console.log(city);
+      let { data: events, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("city", city);
       console.log(events);
       if (error) throw error;
       setData(events);
@@ -106,10 +110,12 @@ export default function EventsScreen() {
         elevation: 3,
         marginHorizontal: 16,
       }}
-      onPress={()=>router.push({
-        pathname:"/(usertabs)/events/usersingleevent",
-        params:{id:item.id}
-      })}
+      onPress={() =>
+        router.push({
+          pathname: "/(usertabs)/events/usersingleevent",
+          params: { id: item.id },
+        })
+      }
     >
       <Image
         source={{ uri: item.photo }}
@@ -136,7 +142,34 @@ export default function EventsScreen() {
       </View>
     </TouchableOpacity>
   );
-
+  const EmptyState = () => (
+    <View className="flex-1 justify-center items-center px-4 mt-20">
+      <MaterialIcons name="event-busy" size={80} color="#CBD5E1" />
+      <Text className="text-xl font-semibold text-gray-700 mt-4">
+        No Events Found
+      </Text>
+      <Text className="text-gray-500 text-center mt-2">
+        There are no upcoming events in your city right now. Please check back
+        later!
+      </Text>
+    </View>
+  );
+  const renderListEmptyComponent = () => {
+    if (searchQuery) {
+      return (
+        <View className="flex-1 justify-center items-center px-4 mt-10">
+          <MaterialIcons name="search-off" size={80} color="#CBD5E1" />
+          <Text className="text-xl font-semibold text-gray-700 mt-4">
+            No Results Found
+          </Text>
+          <Text className="text-gray-500 text-center mt-2">
+            No events match your search "{searchQuery}". Try different keywords.
+          </Text>
+        </View>
+      );
+    }
+    return <EmptyState />;
+  };
   return (
     <SafeAreaView className="flex-1">
       <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -174,8 +207,9 @@ export default function EventsScreen() {
           data={filteredData}
           renderItem={renderEventItem}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingTop: 16 }}
+          contentContainerStyle={{ paddingTop: 16, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={renderListEmptyComponent}
         />
       </View>
     </SafeAreaView>

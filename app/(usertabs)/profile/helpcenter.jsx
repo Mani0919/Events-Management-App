@@ -66,30 +66,7 @@ export default function HelpCenter() {
         {/* Search Bar */}
 
 
-        {/* Quick Help Sections */}
-        <Text className="text-xl font-bold text-gray-800 mb-4">How can we help?</Text>
-        <View className="mb-6">
-          <HelpSection
-            title="Using the Map"
-            icon="map"
-            onPress={() => router.push("/(tabs)/help/map-guide")}
-          />
-          <HelpSection
-            title="Finding Events"
-            icon="calendar"
-            onPress={() => router.push("/(tabs)/help/events")}
-          />
-          <HelpSection
-            title="Contact Support"
-            icon="headset"
-            onPress={() => router.push("/(usertabs)/profile/contact")}
-          />
-          <HelpSection
-            title="App Features"
-            icon="apps"
-            onPress={() => router.push("/(tabs)/help/features")}
-          />
-        </View>
+   
 
         {/* FAQs Section */}
         <Text className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</Text>

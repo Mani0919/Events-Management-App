@@ -12,6 +12,7 @@ import {
   Keyboard,
   ScrollView,
   Share,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -243,9 +244,9 @@ export default function SingleEvent() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100 ">
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "padding"}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
       >
         <ScrollView keyboardShouldPersistTaps="handled" bounces={false}>
           <EventHeader />
@@ -276,7 +277,17 @@ export default function SingleEvent() {
               <View className="flex-row justify-end border-t border-gray-100 pt-2">
                 <TouchableOpacity
                   className="bg-blue-500 px-6 py-2 rounded-full flex-row items-center"
-                  onPress={handleSubmitCommit}
+                  onPress={()=>
+                  {
+                    if(newComment!=="")
+                    {
+                      handleSubmitCommit()
+                    }
+                    else{
+                      Alert.alert("Comment should not empty")
+                    }
+                  }
+                  }
                 >
                   <MaterialIcons name="send" size={16} color="white" />
                   <Text className="text-white font-semibold ml-1">Send</Text>

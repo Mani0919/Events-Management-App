@@ -42,6 +42,7 @@ export default function Root() {
     <>
       <Tabs
         screenOptions={{
+          tabBarHideOnKeyboard: true,
           tabBarStyle: {
             height: 65,
             paddingBottom: 10,
@@ -113,7 +114,7 @@ export default function Root() {
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="map"
           options={{
             title: "Map",
@@ -123,7 +124,7 @@ export default function Root() {
               </TabIcon>
             ),
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="profile"
           options={{
