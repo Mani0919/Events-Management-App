@@ -134,6 +134,11 @@ export default function Screen1() {
               router.push("/allusers/testimonals");
             }}
           />
+          <MenuButton
+            icon="headset-outline" // or "help-circle-outline"
+            title="Support Messages"
+            onPress={() => router.push("/(admintabs)/profile/supportmessges")} // Adjust route as needed
+          />
         </View>
 
         {/* Other Section */}

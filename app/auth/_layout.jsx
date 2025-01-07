@@ -25,6 +25,13 @@ export default function Root() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="support"
+          options={{
+            title:"Support",
+            headerShown: true,
+          }}
+        />
       </Stack>
     </>
   );

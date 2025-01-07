@@ -9,7 +9,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 export default function Login() {
   useEffect(() => {
     async function fun() {
@@ -82,11 +82,11 @@ export default function Login() {
         </View>
 
         {/* Footer */}
-        <View className="mt-12">
-          <Text className="text-gray-500 text-center text-sm">
-            Need help?{" "}
+        <View className="mt-12 flex flex-row ">
+          <Text className="text-gray-500 text-center text-sm">Need help? </Text>
+          <TouchableOpacity onPress={()=>router.push("/auth/support")}>
             <Text className="text-blue-500 font-medium">Contact Support</Text>
-          </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

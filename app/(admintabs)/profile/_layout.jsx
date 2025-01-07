@@ -20,6 +20,10 @@ export default function Root() {
             title: "Profile Update",
           }}
         />
+        <Stack.Screen name="supportmessges" options={{
+          headerShown:true,
+          title:null
+        }}/>
       </Stack>
     </>
   );

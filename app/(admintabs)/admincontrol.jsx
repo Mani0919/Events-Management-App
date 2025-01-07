@@ -19,7 +19,7 @@ const AdminControl = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
-
+  const [admintype,setAdminType]=useState("")
   useFocusEffect(
     useCallback(() => {
       checkAccess();
@@ -36,7 +36,7 @@ const AdminControl = () => {
         .eq("Email", res);
 
       if (error) throw error;
-
+      setAdminType(data[0].AdminType)
       if (data[0].AdminType !== "hero") {
         Alert.alert("Access Denied", "You don't have permission to access this page");
         router.back();
