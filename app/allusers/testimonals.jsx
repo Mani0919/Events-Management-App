@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../utlis/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StarRating from "../../ui/starrating";
+import img from "../../assets/images/profile.png";
 export default function Testimonals() {
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -43,10 +44,17 @@ export default function Testimonals() {
                 <View className="p-4">
                   {/* Header with Image and Name */}
                   <View className="flex-row items-center mb-4">
-                    <Image
-                      source={{ uri: item?.photo }}
-                      className="w-16 h-16 rounded-full border-2 border-gray-100"
-                    />
+                    {item?.photo ? (
+                      <Image
+                        source={{ uri: item?.photo }}
+                        className="w-16 h-16 rounded-full border-2 border-gray-100"
+                      />
+                    ) : (
+                      <Image
+                        source={img}
+                        className="w-16 h-16 rounded-full border-2 border-gray-100"
+                      />
+                    )}
                     <View className="ml-3">
                       <Text className="text-lg font-bold text-gray-800">
                         {item.name}

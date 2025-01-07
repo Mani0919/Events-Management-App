@@ -109,6 +109,7 @@ export default function Add() {
       if (citydata) {
         router.back();
       }
+      router.back();
     } catch (error) {
       console.log(error);
     }
@@ -151,9 +152,9 @@ export default function Add() {
         .eq("id", id)
         .select();
       console.log(data);
-      if (data) {
+    
         router.back();
-      }
+      
     } catch (error) {
       console.log(error);
     }

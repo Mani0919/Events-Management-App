@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -19,15 +20,14 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import DeleteConfirmationModal from "../../../ui/deletemodal";
+
 export default function Singleevent() {
   const { id } = useLocalSearchParams();
   const [eventData, setEventdata] = useState({});
-  const [showdeletemodal, setShowdeletemodal] = useState(false);
-  const date = new Date();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [comment, setComment] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log(date);
+
   useFocusEffect(
     useCallback(() => {
       SingleEvent();
@@ -36,25 +36,42 @@ export default function Singleevent() {
 
   async function SingleEvent() {
     try {
+      setLoading(true);
       let { data, error } = await supabase
         .from("events")
         .select("*")
         .eq("id", id);
-      console.log(data);
-      setEventdata(data[0]);
-      setComment(data[0].comments.comments);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setEventdata(data[0]);
+        // Safely access comments
+        if (data[0]?.comments?.comments) {
+          setComment(data[0].comments.comments);
+        } else {
+          setComment([]); // Set empty array if no comments
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.log('Error fetching event:', error);
+    } finally {
+      setLoading(false);
     }
   }
+
   const handleDelete = async () => {
     try {
       const { error } = await supabase.from("events").delete().eq("id", id);
-      console.log(error);
+      if (error) throw error;
+      
+      // Navigate back after successful deletion
+      router.back();
     } catch (error) {
-      console.log(error);
+      console.log('Error deleting event:', error);
     }
   };
+
   const formatTimeAgo = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -64,6 +81,7 @@ export default function Singleevent() {
       year: "numeric",
     });
   };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -94,52 +112,42 @@ export default function Singleevent() {
 
           {/* Event Image */}
           <View className="mx-4 rounded-2xl shadow-lg">
-            <Image
-              source={{ uri: eventData?.photo }}
-              className="w-full h-64 object-cover rounded-2xl"
-            />
+            {eventData?.photo && (
+              <Image
+                source={{ uri: eventData.photo }}
+                className="w-full h-64 object-cover rounded-2xl"
+              />
+            )}
           </View>
 
           {/* Event Details */}
           <View className="mx-4 mt-4">
             <Text className="text-2xl font-semibold text-gray-800">
-              {eventData.eventname}
+              {eventData?.eventname || 'Untitled Event'}
             </Text>
 
             {/* Location */}
-            <View className="flex-row items-center mt-2">
-              <Ionicons name="location-sharp" size={20} color="#4b5563" />
-              <Text className="text-base text-gray-600 ml-1">
-                {eventData.location}({eventData.city})
-              </Text>
-            </View>
+            {(eventData?.location || eventData?.city) && (
+              <View className="flex-row items-center mt-2">
+                <Ionicons name="location-sharp" size={20} color="#4b5563" />
+                <Text className="text-base text-gray-600 ml-1">
+                  {eventData.location}{eventData.city ? ` (${eventData.city})` : ''}
+                </Text>
+              </View>
+            )}
 
             {/* Description */}
-            <Text className="text-base text-gray-700 mt-3 leading-6">
-              {eventData.desc}
-            </Text>
+            {eventData?.desc && (
+              <Text className="text-base text-gray-700 mt-3 leading-6">
+                {eventData.desc}
+              </Text>
+            )}
 
             {/* Comments Section */}
             <View className="mt-6">
               <Text className="text-xl font-semibold text-gray-800 mb-4">
                 Comments
               </Text>
-
-              {/* Comment Input */}
-              {/* <View className="flex-row items-center gap-x-2 mb-4">
-                <TextInput
-                  className="flex-1 bg-gray-50 rounded-full px-4 py-2 text-base"
-                  placeholder="Add a comment..."
-                  value={comment}
-                  onChangeText={setComment}
-                />
-                <TouchableOpacity
-                  className="bg-blue-500 p-2 rounded-full"
-                  // onPress={handleAddComment}
-                >
-                  <Ionicons name="send" size={20} color="white" />
-                </TouchableOpacity>
-              </View> */}
 
               {/* Comments List */}
               <View className="w-full max-w-3xl mx-auto">
@@ -160,50 +168,39 @@ export default function Singleevent() {
                             <View className="flex-row items-center space-x-2">
                               <View className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
                                 <Text className="text-sm font-medium text-gray-600">
-                                  {item.author[0].toUpperCase()}
+                                  {item?.author ? item.author[0].toUpperCase() : '?'}
                                 </Text>
                               </View>
                               <View>
                                 <Text className="font-semibold text-gray-800">
-                                  {item.author}
+                                  {item?.author || 'Anonymous'}
                                 </Text>
                                 <Text className="text-xs text-gray-500">
-                                  {formatTimeAgo(item.timestamp)}
+                                  {formatTimeAgo(item?.timestamp)}
                                 </Text>
                               </View>
                             </View>
-
-                            {/* <TouchableOpacity
-                              onPress={() => onDeleteComment(item.id)}
-                              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                            >
-                              <AntDesign
-                                name="trash"
-                                size={16}
-                                className="text-red-500"
-                              />
-                            </TouchableOpacity> */}
                           </View>
                         </View>
 
                         {/* Comment Body */}
                         <View className="p-4">
-                          {item.message && (
+                          {item?.message && (
                             <Text className="text-gray-600 font-medium mb-2">
                               {item.message}
                             </Text>
                           )}
                           <Text className="text-gray-700 leading-relaxed">
-                            {item.text}
+                            {item?.text || ''}
                           </Text>
                         </View>
                       </View>
                     ))}
 
-                    {comment.length === 0 && (
-                      <View className="py-8 text-center">
+                    {(!comment || comment.length === 0) && (
+                      <View className="py-3 text-center">
                         <Text className="text-gray-500">
-                          No comments yet. Be the first to comment!
+                          No comments yet!
                         </Text>
                       </View>
                     )}
