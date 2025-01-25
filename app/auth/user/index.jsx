@@ -25,7 +25,7 @@ export default function Index() {
     offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     forceCodeForRefreshToken: false,
     iosClientId:
-      "117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m.apps.googleusercontent.com",
+      "117182283713-2151b9slb1g89g1gmkfj36t6mpkh8qdn.apps.googleusercontent.com",
   });
 
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function Index() {
         console.log("userinfo", userInfo);
         if (userInfo.type === "success") {
           await AsyncStorage.setItem("isAdmin", "false");
-
+          await AsyncStorage.setItem("usertoken",userInfo.data.idToken)
           try {
             AsyncStorage.setItem("userEmail", userInfo?.data?.user?.email);
             let { data: userData, error: userError } = await supabase

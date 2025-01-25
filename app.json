@@ -29,7 +29,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.117182283713-ufnuj8q7hveldrhu8euqmfh4kjo89k5m"
+          "iosUrlScheme": "com.googleusercontent.apps.117182283713-2151b9slb1g89g1gmkfj36t6mpkh8qdn"
         }
       ],
       "expo-router",

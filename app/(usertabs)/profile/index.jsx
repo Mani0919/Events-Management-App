@@ -49,6 +49,7 @@ export default function UserProfile() {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("userEmail");
+    await AsyncStorage.removeItem("usertoken")
     router.push("/auth");
   };
 

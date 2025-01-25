@@ -105,7 +105,7 @@ export default function Screen1() {
             </View>
             <View>
               <Text className="text-2xl font-bold text-gray-800">
-                {profiledata.Name}
+                {profiledata?.Name}
               </Text>
               <Text className="text-gray-500">View and edit profile</Text>
             </View>
