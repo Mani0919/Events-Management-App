@@ -3,7 +3,7 @@ import { View, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from "r
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import axios from "axios";
 
-const GOOGLE_API_KEY = "AIzaSyCuErAAK2QIvEG7XxqPUEtfisV2sw7EW00"; // Replace with your actual API key
+const GOOGLE_API_KEY = ""; // Replace with your actual API key
 
 export default function MapComponent() {
   const mapRef = useRef(null);
