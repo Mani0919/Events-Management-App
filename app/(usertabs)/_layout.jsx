@@ -114,7 +114,7 @@ export default function Root() {
             ),
           }}
         />
-        {/* <Tabs.Screen
+        <Tabs.Screen
           name="map"
           options={{
             title: "Map",
@@ -124,7 +124,7 @@ export default function Root() {
               </TabIcon>
             ),
           }}
-        /> */}
+        />
         <Tabs.Screen
           name="profile"
           options={{
