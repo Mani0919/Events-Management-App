@@ -9,6 +9,7 @@ export default function layout() {
           title:"Map"
         }}/>
         <Stack.Screen name="maps"/>
+        {/* <Stack.Screen name="locationsearch"/> */}
     </Stack>
   )
 }
