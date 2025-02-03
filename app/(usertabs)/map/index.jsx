@@ -48,40 +48,7 @@ const MapSearch = () => {
     getInitialLocation();
   }, []);
 
-  const searchLocation = async () => {
-    if (!searchQuery.trim()) return;
-
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          searchQuery
-        )}&key=AIzaSyCuErAAK2QIvEG7XxqPUEtfisV2sw7EW00`
-      );
-      const data = await response.json();
-      console.log("data",data)
-      if (data.results && data.results.length > 0) {
-       
-        const { lat, lng } = data.results[0].geometry.location;
-        const newRegion = {
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        };
-
-        setRegion(newRegion);
-        mapRef.current?.animateToRegion(newRegion, 1000);
-      } else {
-        alert('Location not found');
-      }
-    } catch (error) {
-      console.error('Error searching location:', error);
-      alert('Error searching location');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  
 
   if (isLoading || !region) {
     return (
@@ -101,16 +68,7 @@ const MapSearch = () => {
       >
         <Marker coordinate={region} />
       </MapView>
-      {/* <View style={styles.searchContainer} className="absolute z-10 w-full bottom-0">
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search location..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onSubmitEditing={searchLocation}
-          returnKeyType="search"
-        />
-      </View> */}
+      
     </View>
   );
 };
