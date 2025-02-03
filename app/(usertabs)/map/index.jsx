@@ -1,104 +1,119 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { View, Text, Dimensions, Alert } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '../../../utlis/supabase';
 
-const MapSearch = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+const LocationMarkerMap = () => {
   const [region, setRegion] = useState(null);
+  const [data, setData] = useState([]);
   const mapRef = useRef(null);
 
-  // Get initial location when component mounts
   useEffect(() => {
-    const getInitialLocation = async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          // If permission denied, use default location
-          setRegion({
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        } else {
-          // Get current location
-          const location = await Location.getCurrentPositionAsync({});
-          setRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        }
-      } catch (error) {
-        // If there's an error, use default location
-        setRegion({
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getInitialLocation();
+    requestLocationPermission();
   }, []);
 
-  
+  async function requestLocationPermission() {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Needed', 'Location permissions are required to show events on the map');
+        return;
+      }
+      getCity();
+    } catch (error) {
+      console.error("Permission error:", error);
+    }
+  }
 
-  if (isLoading || !region) {
+  async function getCity() {
+    try {
+      const res = await AsyncStorage.getItem("city");
+      if (res) {
+        getEvents(res);
+      }
+    } catch (error) {
+      console.error("Error getting city:", error);
+    }
+  }
+
+  async function getEvents(city) {
+    try {
+      let { data: events, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("city", city);
+
+      if (error) throw error;
+
+      if (events && events.length > 0) {
+        // Geocode all event locations
+        const updatedEvents = await Promise.all(
+          events.map(async (event) => {
+            if (event.location) {
+              try {
+                const geoLocation = await Location.geocodeAsync(event.location);
+                if (geoLocation.length > 0) {
+                  return { ...event, latitude: geoLocation[0].latitude, longitude: geoLocation[0].longitude };
+                }
+              } catch (error) {
+                console.error("Geocode error:", error);
+              }
+            }
+            return { ...event, latitude: 17.3850, longitude: 78.4867 }; // Default fallback
+          })
+        );
+
+        setData(updatedEvents);
+
+        // Set initial region using the first event's coordinates
+        if (updatedEvents.length > 0) {
+          setRegion({
+            latitude: updatedEvents[0].latitude,
+            longitude: updatedEvents[0].longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Could not fetch events');
+    }
+  }
+
+  if (!region) {
     return (
-      <View style={[styles.container, styles.center]}>
-        <ActivityIndicator size="large" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container} className="relative">
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={region}
-        region={region}
-      >
-        <Marker coordinate={region} />
-      </MapView>
-      
-    </View>
+    <MapView
+      provider={PROVIDER_GOOGLE}
+      ref={mapRef}
+      style={{
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      }}
+      initialRegion={region}
+    >
+      {data.map((event) => (
+        <Marker
+          key={event.id}
+          coordinate={{
+            latitude: event.latitude,
+            longitude: event.longitude,
+          }}
+          title={event.eventname}
+          description={`${event.location} | ${new Date(event.startdate).toLocaleDateString()}`}
+        />
+      ))}
+    </MapView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  map: {
-    height: Dimensions.get('window').height - 100,
-  },
-  searchContainer: {
-    padding: 10,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  searchInput: {
-    height: 40,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-});
-
-export default MapSearch;
+export default LocationMarkerMap;

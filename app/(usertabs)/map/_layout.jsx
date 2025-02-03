@@ -6,7 +6,7 @@ export default function layout() {
   return (
     <Stack>
         <Stack.Screen name="index" options={{
-          title:"Current location"
+          title:"Explore Local Events Today!"
         }}/>
         <Stack.Screen name="maps"/>
         {/* <Stack.Screen name="locationsearch"/> */}
