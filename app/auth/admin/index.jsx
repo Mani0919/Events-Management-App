@@ -15,33 +15,37 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@expo/vector-icons/Ionicons";
 export default function Index() {
-  const [Email, setEmail] = useState("crazymani4321@gmail.com");
-  const [Password, setPassword] = useState("Nani@123");
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handleSubmit = async () => {
-    try {
-      let { data, error } = await supabase
-        .from("Admin")
-        .select("*")
-        .eq("Email", Email)
-        .eq("password", Password);
-      console.log(data);
-      if (
-        data.length > 0 &&
-        (data[0].AdminType === "admin" || data[0].AdminType === "hero")
-      ) {
-        console.log("Admin Found");
-        AsyncStorage.setItem("isAdmin", "true");
-        AsyncStorage.setItem("adminEmail", Email);
-        router.push("/(admintabs)");
-      } else {
-        // router.push("/auth/admin/signup");
-        // Alert.alert("you don't have access")
-        showAlert();
+    if (!Email && !Password) {
+      Alert.alert("All feilds are required");
+    } else {
+      try {
+        let { data, error } = await supabase
+          .from("Admin")
+          .select("*")
+          .eq("Email", Email)
+          .eq("password", Password);
+        console.log(data);
+        if (
+          data.length > 0 &&
+          (data[0].AdminType === "admin" || data[0].AdminType === "hero")
+        ) {
+          console.log("Admin Found");
+          AsyncStorage.setItem("isAdmin", "true");
+          AsyncStorage.setItem("adminEmail", Email);
+          router.push("/(admintabs)");
+        } else {
+          // router.push("/auth/admin/signup");
+          // Alert.alert("you don't have access")
+          showAlert();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
   const showAlert = () => {

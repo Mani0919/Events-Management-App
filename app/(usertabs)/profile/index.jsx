@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../utlis/supabase";
 import { UploadToCloudinary } from "../../../ui/cloduinaryimage";
 import img from "../../../assets/images/profile.png";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 const MenuButton = ({
   icon,
   title,
@@ -48,6 +49,7 @@ export default function UserProfile() {
   const [userRating, setUserRating] = useState(0);
 
   const handleLogout = async () => {
+    await GoogleSignin.signOut()
     await AsyncStorage.removeItem("userEmail");
     await AsyncStorage.removeItem("usertoken")
     router.push("/auth");
